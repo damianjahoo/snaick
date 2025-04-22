@@ -1,0 +1,11 @@
+{
+  "userId": "123456",
+  "email": "ania@przyklad.pl",
+  "dietType": "wegetarianizm",
+  "intolerances": ["laktoza"],
+  "avoidedIngredients": ["seler", "kukurydza"],
+  "defaultContext": "w pracy",
+  "snackStylePreferences": ["słodkie", "lekkie"],
+  "favoriteSnacks": ["snack_001", "snack_017"],
+  "snackHistory": ["snack_001", "snack_002", "snack_017"]
+}

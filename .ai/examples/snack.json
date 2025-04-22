@@ -1,0 +1,18 @@
+{
+  "title": "Jogurt z kakao i orzechami",
+  "description": "Słodka, szybka i sycąca przekąska idealna do pracy. Bez cukru, z dodatkiem zdrowych tłuszczów.",
+  "ingredients": [
+    "150 g jogurtu naturalnego",
+    "1 łyżka kakao",
+    "garść orzechów włoskich"
+  ],
+  "instructions": "Wymieszaj jogurt z kakao, posyp orzechami.",
+  "nutrition": {
+    "kcal": 230,
+    "protein": "8g",
+    "fat": "10g",
+    "carbohydrates": "18g",
+    "fibre": "4g"
+  },
+  "actions": ["save", "next"]
+}

@@ -1,0 +1,95 @@
+{
+  "title": "Zaproponuj mi przekąskę",
+  "fields": [
+    {
+      "name": "mealsToday",
+      "type": "textarea",
+      "label": "Opisz krótko, co dziś jadłeś(-aś)",
+      "placeholder": "Np. kanapka z serem, kawa, bigos na obiad",
+      "required": true
+    },
+    {
+      "name": "cravingType",
+      "type": "radio",
+      "label": "Jaką przekąskę teraz chcesz?",
+      "options": [
+        "Coś słodkiego",
+        "Coś słonego",
+        "Coś lekkiego",
+        "Coś sycącego",
+        "Bez różnicy"
+      ],
+      "required": true
+    },
+    {
+      "name": "exclusions",
+      "type": "textarea",
+      "label": "Na co NIE masz ochoty lub czego nie możesz jeść?",
+      "placeholder": "Np. nic mlecznego, żadnych bananów, nic do podgrzewania",
+      "required": false
+    },
+    {
+      "name": "location",
+      "type": "radio",
+      "label": "Gdzie teraz jesteś?",
+      "options": [
+        "W pracy (mam mikrofalę)",
+        "W domu (mogę coś prostego zrobić)",
+        "W sklepie (chcę coś kupić)",
+        "Poza domem/sklepem – chcę coś gotowego"
+      ],
+      "required": true
+    },
+    {
+      "name": "goal",
+      "type": "radio",
+      "label": "Czy chcesz, żeby przekąska spełniała jakiś cel?",
+      "options": [
+        "Staram się jeść zdrowo",
+        "Chcę coś niskokalorycznego (do ___ kcal)",
+        "Nie mam celu – chcę coś w miarę normalnego"
+      ],
+      "required": true
+    },
+    {
+      "name": "calorieLimit",
+      "type": "number",
+      "label": "Ile maksymalnie kcal?",
+      "placeholder": "Np. 250",
+      "required": true,
+      "visibleIf": {
+        "field": "goal",
+        "equals": "Chcę coś niskokalorycznego (do ___ kcal)"
+      }
+    },
+    {
+      "name": "restrictions",
+      "type": "checkbox",
+      "label": "Czy unikasz czegoś na stałe?",
+      "options": [
+        "Weganizm",
+        "Wegetarianizm",
+        "Bez laktozy",
+        "Bez glutenu",
+        "Alergie",
+        "Brak ograniczeń"
+      ],
+      "required": false
+    },
+    {
+      "name": "allergyDetails",
+      "type": "textarea",
+      "label": "Jakie alergie?",
+      "placeholder": "Np. orzechy, soja, gluten",
+      "required": true,
+      "visibleIf": {
+        "field": "restrictions",
+        "includes": "Alergie"
+      }
+    }
+  ],
+  "submitButton": {
+    "label": "Znajdź mi przekąskę",
+    "type": "submit"
+  }
+}
