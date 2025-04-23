@@ -64,18 +64,14 @@ Authentication will be handled directly by Supabase Auth client-side, so no expl
   - 401 Unauthorized - User not authenticated
   - 500 Internal Server Error - LLM generation error
 
-#### Get All Snacks (Admin Only)
+#### Get All Snacks
 
 - **Method**: GET
 - **Path**: `/api/snacks`
-- **Description**: Retrieves all snacks in the database
+- **Description**: Retrieves all snacks for the authenticated user
 - **Query Parameters**:
   - `page`: number (default: 1)
   - `limit`: number (default: 20)
-  - `snack_type`: string (optional)
-  - `location`: string (optional)
-  - `goal`: string (optional)
-  - `preferred_diet`: string (optional)
 - **Response**:
   ```json
   {
@@ -99,7 +95,6 @@ Authentication will be handled directly by Supabase Auth client-side, so no expl
 - **Success Code**: 200 OK
 - **Error Codes**:
   - 401 Unauthorized - User not authenticated
-  - 403 Forbidden - User not authorized
 
 #### Get Snack Details
 
