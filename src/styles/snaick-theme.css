@@ -1,0 +1,63 @@
+@reference "./global.css";
+
+@layer base {
+  /* Custom color scheme for SnAIck */
+  :root {
+    --snaick-bg-gradient-from: #1a1654; /* from-indigo-950 */
+    --snaick-bg-gradient-via: #4a1d6e; /* via-purple-950 */
+    --snaick-bg-gradient-to: #172554; /* to-blue-950 */
+    --snaick-text-primary: #ffffff; /* text-white */
+    --snaick-text-secondary: rgba(219, 234, 254, 0.9); /* text-blue-100/90 */
+    --snaick-text-muted: rgba(219, 234, 254, 0.7); /* text-blue-100/70 */
+    --snaick-text-faded: rgba(219, 234, 254, 0.6); /* text-blue-100/60 */
+    --snaick-gradient-text-from: #bfdbfe; /* from-blue-200 */
+    --snaick-gradient-text-via: #ddd6fe; /* via-purple-200 */
+    --snaick-gradient-text-to: #fbcfe8; /* to-pink-200 */
+    --snaick-blue-accent: #bfdbfe; /* blue-200 */
+    --snaick-blue-hover: #93c5fd; /* blue-300 */
+    --snaick-card-bg: rgba(255, 255, 255, 0.05); /* white/5 */
+    --snaick-border: rgba(255, 255, 255, 0.1); /* white/10 */
+    --snaick-border-hover: rgba(255, 255, 255, 0.2); /* white/20 */
+    --snaick-overlay: rgba(0, 0, 0, 0.2); /* black/20 */
+    --snaick-overlay-light: rgba(0, 0, 0, 0.1); /* black/10 */
+    --snaick-blue-bg: rgba(59, 130, 246, 0.2); /* bg-blue-500/20 */
+    --snaick-purple-bg: rgba(168, 85, 247, 0.2); /* bg-purple-500/20 */
+    --snaick-pink-bg: rgba(236, 72, 153, 0.2); /* bg-pink-500/20 */
+    --snaick-blue-text: #93c5fd; /* text-blue-300 */
+    --snaick-purple-text: #d8b4fe; /* text-purple-300 */
+    --snaick-pink-text: #f9a8d4; /* text-pink-300 */
+  }
+
+  /* Animation for hover effects */
+  .hover-lift {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Additional responsive helpers */
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section-spacing {
+    @apply py-8 sm:py-12 lg:py-16;
+  }
+  
+  /* Custom card styles */
+  .snaick-card {
+    @apply bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all;
+  }
+
+  /* Custom button styles */
+  .snaick-button-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-black bg-blue-200 hover:bg-blue-300 transition-colors;
+  }
+  
+  .snaick-button-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-white/20 text-base font-medium rounded-lg text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-colors;
+  }
+} 

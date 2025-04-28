@@ -1,0 +1,45 @@
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+
+<form class="space-y-6">
+  <div class="space-y-2">
+    <label for="name" class="block text-sm font-medium text-blue-100">Imię i nazwisko</label>
+    <Input 
+      id="name" 
+      type="text" 
+      placeholder="Jan Kowalski" 
+      required 
+      className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus-visible:ring-blue-300/30 focus-visible:border-blue-200/50" 
+      client:load
+    />
+  </div>
+  <div class="space-y-2">
+    <label for="email" class="block text-sm font-medium text-blue-100">Email</label>
+    <Input 
+      id="email" 
+      type="email" 
+      placeholder="twoj@email.com" 
+      required 
+      className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus-visible:ring-blue-300/30 focus-visible:border-blue-200/50" 
+      client:load
+    />
+  </div>
+  <div class="space-y-2">
+    <label for="preferences" class="block text-sm font-medium text-blue-100">Preferencje</label>
+    <Input 
+      id="preferences" 
+      type="text" 
+      placeholder="Twoje preferencje" 
+      required 
+      className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus-visible:ring-blue-300/30 focus-visible:border-blue-200/50" 
+      client:load
+    />
+  </div>
+  <Button 
+    type="submit" 
+    className="w-full bg-blue-200 text-black hover:bg-blue-300 focus-visible:ring-blue-300/30"
+    client:load
+  >
+    Generuj przekąskę
+  </Button>
+</form>

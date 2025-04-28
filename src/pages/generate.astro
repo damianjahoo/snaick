@@ -1,13 +1,29 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
 import GenerateSnackForm from "../components/snack-generation/GenerateSnackForm";
 ---
 
 <Layout title="Wygeneruj przekąskę | SnAIck">
-  <main class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8 text-center">Wygeneruj swoją idealną przekąskę</h1>
-    <div class="max-w-2xl mx-auto">
-      <GenerateSnackForm client:load />
-    </div>
-  </main>
-</Layout> 
+  <div class="relative w-full mx-auto min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-blue-950">
+    <Navigation />
+    
+    <main class="pt-32 pb-24 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl sm:text-4xl font-bold mb-6 text-center bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 text-transparent bg-clip-text">
+          Wygeneruj swoją idealną przekąskę
+        </h1>
+        <p class="text-lg text-blue-100/80 text-center mb-10 max-w-2xl mx-auto">
+          Podaj swoje preferencje i pozwól AI znaleźć idealną przekąskę dostosowaną do Twoich potrzeb
+        </p>
+        
+        <div class="bg-white/5 backdrop-blur-lg rounded-xl p-6 sm:p-8 border border-white/10 shadow-lg">
+          <GenerateSnackForm client:load />
+        </div>
+      </div>
+    </main>
+    
+    <Footer className="absolute bottom-0 w-full" />
+  </div>
+</Layout>

@@ -1,0 +1,135 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../components/ui/card";
+---
+
+<Layout title="Rejestracja - SnAIck">
+  <div class="relative w-full mx-auto min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-blue-950">
+    <Navigation />
+
+    <main class="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-md mx-auto">
+        <Card className="bg-white/5 backdrop-blur-lg border border-white/10 text-white">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold text-center bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 text-transparent bg-clip-text">Rejestracja</CardTitle>
+            <CardDescription className="text-blue-100/70 text-center">Utwórz konto i zacznij korzystać z SnAIck</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form class="space-y-6">
+              <div class="space-y-2">
+                <label for="name" class="block text-sm font-medium text-blue-100">Imię i nazwisko</label>
+                <Input 
+                  id="name" 
+                  type="text" 
+                  placeholder="Jan Kowalski" 
+                  required 
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus-visible:ring-blue-300/30 focus-visible:border-blue-200/50" 
+                  client:load
+                />
+              </div>
+              <div class="space-y-2">
+                <label for="email" class="block text-sm font-medium text-blue-100">Email</label>
+                <Input 
+                  id="email" 
+                  type="email" 
+                  placeholder="twoj@email.com" 
+                  required 
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus-visible:ring-blue-300/30 focus-visible:border-blue-200/50" 
+                  client:load
+                />
+              </div>
+              <div class="space-y-2">
+                <label for="password" class="block text-sm font-medium text-blue-100">Hasło</label>
+                <Input 
+                  id="password" 
+                  type="password" 
+                  required 
+                  placeholder="Minimum 8 znaków"
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus-visible:ring-blue-300/30 focus-visible:border-blue-200/50" 
+                  client:load
+                />
+              </div>
+              <div class="space-y-2">
+                <label for="password-confirm" class="block text-sm font-medium text-blue-100">Potwierdź hasło</label>
+                <Input 
+                  id="password-confirm" 
+                  type="password" 
+                  required 
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus-visible:ring-blue-300/30 focus-visible:border-blue-200/50" 
+                  client:load
+                />
+              </div>
+              <div class="flex items-center space-x-2">
+                <input 
+                  type="checkbox" 
+                  id="terms" 
+                  required
+                  class="h-4 w-4 rounded border-white/10 bg-white/5 focus:ring-blue-300/30 text-blue-200"
+                />
+                <label for="terms" class="text-sm text-blue-100">
+                  Akceptuję <a href="/terms" class="text-blue-200 hover:text-blue-300 transition-colors">warunki korzystania</a> oraz <a href="/privacy" class="text-blue-200 hover:text-blue-300 transition-colors">politykę prywatności</a>
+                </label>
+              </div>
+              <Button 
+                type="submit" 
+                className="w-full bg-blue-200 text-black hover:bg-blue-300 focus-visible:ring-blue-300/30"
+                client:load
+              >
+                Zarejestruj się
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter className="justify-center flex-col space-y-4">
+            <div class="text-center text-sm">
+              <span class="text-blue-100/70">Masz już konto?</span>
+              <a href="/login" class="ml-1 text-blue-200 hover:text-blue-300 transition-colors">
+                Zaloguj się
+              </a>
+            </div>
+            <div class="relative w-full">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-white/10"></div>
+              </div>
+              <div class="relative flex justify-center text-xs">
+                <span class="bg-black/20 px-2 text-blue-100/70 backdrop-blur-sm rounded-md">
+                  Lub zarejestruj się przez
+                </span>
+              </div>
+            </div>
+            <div class="flex gap-4 justify-center">
+              <Button 
+                variant="outline" 
+                className="bg-white/5 border-white/10 text-white hover:bg-white/10 focus-visible:ring-blue-300/30"
+                client:load
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5">
+                  <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115Z"/>
+                  <path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 0 1-6.723-4.823l-4.04 3.067A11.965 11.965 0 0 0 12 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987Z"/>
+                  <path fill="#4A90E2" d="M19.834 21c2.195-2.048 3.62-5.096 3.62-9 0-.71-.109-1.473-.272-2.182H12v4.637h6.436c-.317 1.559-1.17 2.766-2.395 3.558L19.834 21Z"/>
+                  <path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 0 1 4.909 12c0-.782.125-1.533.357-2.235L1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067Z"/>
+                </svg>
+                <span>Google</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                className="bg-white/5 border-white/10 text-white hover:bg-white/10 focus-visible:ring-blue-300/30"
+                client:load
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-5 w-5">
+                  <path fill="#1877F2" d="M24 12.073c0-5.8-4.701-10.5-10.5-10.5s-10.5 4.7-10.5 10.5c0 5.23 3.817 9.557 8.803 10.346v-7.32H8.244v-3.026h3.559V9.499c0-3.509 2.089-5.448 5.288-5.448 1.53 0 3.132.273 3.132.273v3.444h-1.764c-1.739 0-2.282 1.078-2.282 2.186v2.624h3.885l-.62 3.027h-3.265v7.323c4.986-.787 8.803-5.119 8.803-10.35Z" />
+                </svg>
+                <span>Facebook</span>
+              </Button>
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
+    </main>
+
+    <Footer className="absolute bottom-0 w-full" />
+  </div>
+</Layout>
