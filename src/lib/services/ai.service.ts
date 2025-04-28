@@ -1,7 +1,11 @@
 import type { GenerateSnackRequest } from "../../types";
+import { OpenRouterService } from "./openrouter/service";
+import { ValidationError } from "./openrouter/errors";
+import { mapOpenRouterToSnackResponse } from "../mappers/ai-response.mapper";
+import type { Message, ResponseFormat } from "../../types";
 
 // Response type for AI generation
-interface AISnackResponse {
+export interface AISnackResponse {
   title: string;
   description: string;
   ingredients: string;
@@ -14,16 +18,132 @@ interface AISnackResponse {
 }
 
 export class AIService {
+  private openRouter: OpenRouterService;
+
+  constructor(
+    config: {
+      apiKey?: string;
+    } = {}
+  ) {
+    // Use API key from config or from environment variables
+    const apiKey = config.apiKey || import.meta.env.OPENROUTER_API_KEY;
+
+    if (!apiKey) {
+      throw new Error("OpenRouter API key is required. Please provide it via config or set OPENROUTER_API_KEY in .env");
+    }
+
+    // Initialize OpenRouter service
+    this.openRouter = new OpenRouterService({
+      apiKey,
+      defaultModel: "microsoft/mai-ds-r1:free",
+      defaultParams: {
+        temperature: 0.7,
+        max_tokens: 1500,
+      },
+    });
+  }
+
   /**
-   * Mock implementation that returns a simple snack matching the criteria
-   * In production, this would call the OpenRouter API
+   * Generates a snack recommendation based on user preferences
+   * Uses direct OpenRouter API calls
    */
   async generateSnackRecommendation(preferences: GenerateSnackRequest): Promise<AISnackResponse> {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      // Create JSON response format schema
+      const responseFormat = this.openRouter.createJsonResponseFormat("snackResponse", {
+        type: "object",
+        properties: {
+          title: { type: "string" },
+          description: { type: "string" },
+          ingredients: { type: "string" },
+          instructions: { type: "string" },
+          kcal: { type: "number" },
+          protein: { type: "number" },
+          fat: { type: "number" },
+          carbohydrates: { type: "number" },
+          fibre: { type: "number" },
+        },
+        required: [
+          "title",
+          "description",
+          "ingredients",
+          "instructions",
+          "kcal",
+          "protein",
+          "fat",
+          "carbohydrates",
+          "fibre",
+        ],
+      });
 
-    // Mock response based on preferences
-    return this.generateMockResponse(preferences);
+      // Send request to OpenRouter API
+      const prompt = this.buildPrompt(preferences);
+
+      // Check if the model supports structured output
+      const modelSupportsStructuredOutput = this.openRouter.isModelCapableOfStructuredOutput();
+
+      // Prepare chat request options
+      const chatOptions: {
+        messages: Message[];
+        responseFormat?: ResponseFormat;
+      } = {
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a nutritionist assistant that specializes in snack recommendations based on user preferences. Always respond with valid JSON object that follows the exact schema provided. Do not provide any additional text or comments.",
+          },
+          { role: "user", content: prompt },
+        ],
+      };
+
+      // Only include responseFormat if the model supports it
+      if (modelSupportsStructuredOutput) {
+        chatOptions.responseFormat = responseFormat;
+      }
+
+      // Send the request
+      const response = await this.openRouter.chat(chatOptions);
+
+      // Use the mapper to extract and transform the JSON from the text response
+      const snackResponse = mapOpenRouterToSnackResponse(response.content);
+
+      return snackResponse;
+    } catch {
+      // Fallback to mock response in case of error
+      return this.generateMockResponse(preferences);
+    }
+  }
+
+  private validateSnackResponse(response: AISnackResponse): void {
+    const requiredFields = [
+      "title",
+      "description",
+      "ingredients",
+      "instructions",
+      "kcal",
+      "protein",
+      "fat",
+      "carbohydrates",
+      "fibre",
+    ];
+
+    for (const field of requiredFields) {
+      if (!(field in response)) {
+        throw new ValidationError(`Missing required field: ${field}`);
+      }
+    }
+
+    // Validate numeric fields
+    const numericFields = ["kcal", "protein", "fat", "carbohydrates", "fibre"];
+    for (const field of numericFields) {
+      if (
+        typeof response[field as keyof AISnackResponse] !== "number" ||
+        isNaN(response[field as keyof AISnackResponse] as number)
+      ) {
+        throw new ValidationError(`Field ${field} must be a valid number`);
+      }
+    }
   }
 
   private buildPrompt(preferences: GenerateSnackRequest): string {

@@ -154,3 +154,92 @@ export interface AddFavoriteResponse {
 export interface RemoveFavoriteResponse {
   success: boolean;
 }
+
+// ----------------------
+// OpenRouter Service Types
+// ----------------------
+
+/**
+ * Represents a message in a conversation
+ */
+export interface Message {
+  role: "system" | "user" | "assistant";
+  content: string;
+}
+
+/**
+ * Represents a system message
+ */
+export interface SystemMessage extends Message {
+  role: "system";
+}
+
+/**
+ * Represents a user message
+ */
+export interface UserMessage extends Message {
+  role: "user";
+}
+
+/**
+ * Represents an assistant message
+ */
+export interface AssistantMessage extends Message {
+  role: "assistant";
+}
+
+/**
+ * Parameters for configuring model behavior
+ */
+export interface ModelParameters {
+  temperature?: number;
+  max_tokens?: number;
+  top_p?: number;
+  frequency_penalty?: number;
+  presence_penalty?: number;
+  stop?: string[];
+}
+
+/**
+ * Format specification for model responses
+ */
+export interface ResponseFormat {
+  type: "json_schema";
+  json_schema: {
+    name: string;
+    strict: boolean;
+    schema: JSONSchema;
+  };
+}
+
+/**
+ * Represents an AI model's metadata
+ */
+export interface Model {
+  id: string;
+  name: string;
+  provider: string;
+  tokenLimit: number;
+  // Other model properties
+}
+
+/**
+ * Response from a chat completion request
+ */
+export interface ChatResponse {
+  content: string;
+  model: string;
+  parsedJson?: unknown;
+  // Response metadata
+}
+
+/**
+ * JSON Schema definition
+ */
+export interface JSONSchema {
+  type: string;
+  properties?: Record<string, JSONSchema>;
+  items?: JSONSchema;
+  required?: string[];
+  [key: string]: unknown;
+}
