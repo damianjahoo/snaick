@@ -177,10 +177,18 @@ US-012: Bezpieczny dostęp i uwierzytelnianie
   - Logowanie wymaga podania adresu email i hasła.
   - Rejestracja wymaga podania adresu email, hasła i potwierdzenia hasła.
   - Użytkownik NIE MOŻE korzystać z systemu bez logowania się do systemu (nie dotyczy strony powitalnej).
-  - Użytkownik może logować się do systemu poprzez przycisk w prawym górnym rogu.
-  - Użytkownik może się wylogować z systemu poprzez przycisk w prawym górnym rogu w głównym @Layout.astro.
   - Nie korzystamy z zewnętrznych serwisów logowania (np. Google, GitHub).
   - Odzyskiwanie hasła powinno być możliwe.
+
+US-013: Dynamiczna nawigacja i autoryzacja
+- Jako użytkownik chcę widzieć odpowiednie opcje nawigacji w zależności od tego, czy jestem zalogowany.
+- Kryteria akceptacji:
+  - Dla niezalogowanych użytkowników wyświetlają się zakładki: "Strona główna", "Zaloguj się", "Zarejestruj się"
+  - Dla zalogowanych użytkowników wyświetlają się zakładki: "Strona główna", "Znajdź przekąskę", "Ulubione", "Wyloguj się"
+  - Zalogowany użytkownik widzi powitanie "Cześć [nazwa użytkownika]!" w prawym górnym rogu
+  - Strony "Znajdź przekąskę" i "Ulubione" są zabezpieczone przed nieautoryzowanym dostępem
+  - Opcja "Wyloguj się" kończy sesję użytkownika i przekierowuje na stronę główną
+  - Nawigacja jest responsywna i działa poprawnie na urządzeniach mobilnych
 
 ## 6. Metryki sukcesu
 Sukces MVP aplikacji SnAIck będzie mierzony na podstawie następujących kryteriów:
