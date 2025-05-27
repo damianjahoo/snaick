@@ -73,9 +73,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const response = await next();
     response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
     return response;
-  } catch (error) {
-    console.error("Middleware error:", error);
-
+  } catch {
     // On error, treat as unauthenticated
     (locals as typeof locals & { user: { id: string; email: string | undefined } | null }).user = null;
 
