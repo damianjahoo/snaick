@@ -51,7 +51,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
 
     // Check if current path is public
-    const isPublicPath = PUBLIC_PATHS.some((path) => url.pathname === path || url.pathname.startsWith(path));
+    const isPublicPath = PUBLIC_PATHS.some((path) => {
+      if (path === "/") {
+        return url.pathname === "/";
+      }
+      return url.pathname === path || url.pathname.startsWith(path);
+    });
 
     // Check if current path is auth-only (login/register)
     const isAuthOnlyPath = AUTH_ONLY_PATHS.includes(url.pathname);
@@ -65,7 +70,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
     if (!user && !isPublicPath) {
       return redirect("/login");
     }
-    return next();
+    const response = await next();
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    return response;
   } catch (error) {
     console.error("Middleware error:", error);
 
@@ -73,12 +80,19 @@ export const onRequest = defineMiddleware(async (context, next) => {
     (locals as typeof locals & { user: { id: string; email: string | undefined } | null }).user = null;
 
     // If trying to access protected route, redirect to login
-    const isPublicPath = PUBLIC_PATHS.some((path) => url.pathname === path || url.pathname.startsWith(path));
+    const isPublicPath = PUBLIC_PATHS.some((path) => {
+      if (path === "/") {
+        return url.pathname === "/";
+      }
+      return url.pathname === path || url.pathname.startsWith(path);
+    });
 
     if (!isPublicPath) {
       return redirect("/login");
     }
 
-    return next();
+    const response = await next();
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    return response;
   }
 });
