@@ -4,15 +4,23 @@
 
 ### Layouty i nawigacja
 - Główne layouty:
-  - `src/layouts/PublicLayout.astro`: header z przyciskami "Zaloguj" i "Zarejestruj", wykorzystywany na stronach publicznych, w tym stronie powitalnej (`/`).
-  - `src/layouts/AuthLayout.astro`: header z przyciskiem "Wyloguj" i linkami do stron chronionych, wykorzystywany po zalogowaniu.
+  - `src/layouts/PublicLayout.astro`: header z przyciskami "Zaloguj" i "Zarejestruj" w prawym górnym rogu, wykorzystywany na stronach publicznych, w tym stronie powitalnej (`/`).
+  - `src/layouts/AuthLayout.astro`: header z przyciskiem "Wyloguj" w prawym górnym rogu i linkami do stron chronionych, wykorzystywany po zalogowaniu.
 - Strona powitalna (`/`):
   - Plik: `src/pages/index.astro` korzysta z `PublicLayout.astro`.
   - Zawartość: krótki opis aplikacji, przyciski CTA "Zarejestruj"/"Zaloguj".
+  - Dostępna dla wszystkich użytkowników (zalogowanych i niezalogowanych).
 - Dekompozycja/aktualizacja `src/layouts/Layout.astro` na bazie PublicLayout i AuthLayout w celu zachowania spójności.
 - Aktualizacja importów w plikach stron:
   - Publiczne strony (`src/pages/index.astro`, `register.astro`, `login.astro`, `reset-password.astro`, `reset-password/[token].astro`): zamiana `import Layout` na `import PublicLayout`.
-  - Chronione strony (`src/pages/generate.astro`, `src/pages/favorites.astro`, `src/pages/favorites/[id].astro`): zamiana `import Layout` na `import AuthLayout`.
+  - Chronione strony (główny formularz generowania przekąsek, lista ulubionych, szczegóły ulubionych): zamiana `import Layout` na `import AuthLayout`.
+
+### Mapowanie stron chronionych
+Zgodnie z PRD, następujące strony wymagają uwierzytelnienia:
+- Główny formularz generowania przekąsek (prawdopodobnie `/generate` lub `/dashboard`)
+- Lista ulubionych przekąsek (`/favorites`)
+- Szczegóły ulubionej przekąski (`/favorites/[id]`)
+- Wszystkie inne strony związane z zarządzaniem kontem użytkownika
 
 ### Strony i komponenty
 - `src/pages/register.astro`
@@ -40,7 +48,7 @@
   - `/api/auth/reset-password` (PasswordResetRequestDTO)
   - `/api/auth/reset-password/:token` (PasswordResetDTO)
 - Po otrzymaniu odpowiedzi HTTP:
-  - `200 OK` przy rejestracji/login → przekierowanie do `/`.
+  - `200 OK` przy rejestracji/login → przekierowanie do głównej strony aplikacji (pierwsza chroniona strona - formularz generowania przekąsek).
   - `200 OK` przy żądaniu resetu → komunikat o wysłanym mailu.
   - `200 OK` przy potwierdzeniu resetu → przekierowanie do `/login`.
 - Błędy `400`, `401`, `409` → wyświetlanie komunikatów pod formularzem lub toast.
@@ -108,6 +116,7 @@
      - `context.locals.session = session;`
      - Lista publicznych ścieżek: `/`, `/login`, `/register`, `/reset-password`, `/reset-password/:token`, `/api/auth/*`.
      - Jeśli ruta chroniona i brak `session` → `return context.redirect('/login');`
+     - Jeśli użytkownik zalogowany próbuje dostać się do `/login` lub `/register` → `return context.redirect('/generate');` (lub główna strona aplikacji).
   3. `return next();`
 
 ## 3. System autentykacji (Supabase Auth)
@@ -134,7 +143,7 @@
 ### Wylogowanie
 - `supabaseClient.auth.signOut()`
 - Usunięcie cookie/localStorage.
-- Przekierowanie do `/login`.
+- Przekierowanie do `/` (strona powitalna).
 
 ### Odzyskiwanie hasła
 - Request: `supabaseClient.auth.resetPasswordForEmail(email, { redirectTo })`
@@ -146,3 +155,26 @@
   - `SUPABASE_URL`
   - `SUPABASE_KEY`
 - Plik `src/db/supabase.client.ts` inicjalizuje `supabaseClient` na podstawie tych zmiennych
+
+## 4. Zgodność z wymaganiami PRD
+
+### Realizacja User Stories
+- **US-001 (Rejestracja)**: Realizowana przez `/register` z RegisterForm.tsx
+- **US-002 (Logowanie)**: Realizowana przez `/login` z LoginForm.tsx  
+- **US-003 (Wylogowanie)**: Przycisk "Wyloguj" w AuthLayout, przekierowanie do `/`
+- **US-011 (Ochrona danych)**: Supabase Auth + RLS
+- **US-012 (Bezpieczny dostęp)**: 
+  - Dedykowane strony logowania/rejestracji ✓
+  - Email + hasło ✓
+  - Potwierdzenie hasła przy rejestracji ✓
+  - Brak dostępu bez logowania (poza stroną powitalną) ✓
+  - Przyciski w prawym górnym rogu ✓
+  - Brak zewnętrznych serwisów logowania ✓
+  - Odzyskiwanie hasła ✓
+
+### Przepływ użytkownika zgodny z PRD
+1. Użytkownik wchodzi na `/` (strona powitalna)
+2. Klika "Zarejestruj" lub "Zaloguj" 
+3. Po pomyślnej rejestracji/logowaniu → przekierowanie do głównej funkcjonalności aplikacji
+4. Dostęp do formularza generowania przekąsek i zarządzania ulubionymi
+5. Możliwość wylogowania z powrotem na stronę powitalną
