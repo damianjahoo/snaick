@@ -10,7 +10,11 @@ const { className = "" } = Astro.props;
 <footer class={`py-8 px-4 sm:px-6 lg:px-8 border-t border-white/10 bg-black/20 ${className}`}>
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
     <div class="mb-4 md:mb-0">
-      <a href="/" class="text-lg font-bold bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 text-transparent bg-clip-text">SnAIck</a>
+      <a
+        href="/"
+        class="text-lg font-bold bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 text-transparent bg-clip-text"
+        >SnAIck</a
+      >
       <p class="text-sm text-blue-100/60 mt-1">© {new Date().getFullYear()} SnAIck. Wszystkie prawa zastrzeżone.</p>
     </div>
     <nav class="flex flex-wrap gap-x-6 gap-y-2 justify-center">
@@ -19,4 +23,4 @@ const { className = "" } = Astro.props;
       <a href="/contact" class="text-sm text-blue-100/60 hover:text-blue-200 transition-colors">Kontakt</a>
     </nav>
   </div>
-</footer> 
+</footer>

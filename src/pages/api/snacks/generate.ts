@@ -2,13 +2,17 @@ import type { APIRoute } from "astro";
 import { generateSnackSchema } from "../../../lib/validation/snack.schema";
 import { SnackService } from "../../../lib/services/snack.service";
 import type { GenerateSnackRequest } from "../../../types";
+import { createSupabaseServerInstance } from "../../../db/supabase.client";
 
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   try {
-    // Get Supabase client from locals
-    const supabase = locals.supabase;
+    // Create Supabase server instance with proper SSR support
+    const supabase = createSupabaseServerInstance({
+      cookies,
+      headers: request.headers,
+    });
 
     // For testing purposes, we're not implementing real authentication
     // In production, we would check the session here

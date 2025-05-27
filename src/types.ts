@@ -27,6 +27,42 @@ export type Snack = Database["public"]["Tables"]["snacks"]["Row"];
 export type UserFavorite = Database["public"]["Tables"]["user_favourites"]["Row"];
 
 // ----------------------
+// Authentication DTOs
+// ----------------------
+
+/**
+ * Request model for user registration
+ */
+export interface RegisterDTO {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+/**
+ * Request model for user login
+ */
+export interface LoginDTO {
+  email: string;
+  password: string;
+}
+
+/**
+ * Request model for password reset request
+ */
+export interface PasswordResetRequestDTO {
+  email: string;
+}
+
+/**
+ * Request model for password reset confirmation
+ */
+export interface PasswordResetDTO {
+  token: string;
+  newPassword: string;
+}
+
+// ----------------------
 // Command Models (Request DTOs)
 // ----------------------
 

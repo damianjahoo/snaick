@@ -2,10 +2,11 @@ import type { APIRoute } from "astro";
 import { z } from "zod";
 import type { SnackListResponse } from "../../types";
 import { SnackService } from "../../lib/services/snack.service";
+import { createSupabaseServerInstance } from "../../db/supabase.client";
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ request, locals }) => {
+export const GET: APIRoute = async ({ request, cookies }) => {
   // Parse query parameters
   const url = new URL(request.url);
   const pageParam = url.searchParams.get("page") ?? "1";
@@ -30,8 +31,13 @@ export const GET: APIRoute = async ({ request, locals }) => {
   // For testing, use default user from supabase
   const userId = "default-user";
 
+  // Create Supabase server instance with proper SSR support
+  const supabase = createSupabaseServerInstance({
+    cookies,
+    headers: request.headers,
+  });
+
   // Call the service layer to get snacks
-  const supabase = locals.supabase;
   const snackService = new SnackService(supabase);
   try {
     const result: SnackListResponse = await snackService.getSnacks({

@@ -2,10 +2,9 @@
 import Layout from "../layouts/Layout.astro";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
-import GenerateSnackForm from "../components/snack-generation/GenerateSnackForm";
 ---
 
-<Layout title="Wygeneruj przekąskę | SnAIck">
+<Layout title="Ulubione przekąski | SnAIck">
   <div class="relative w-full mx-auto min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-blue-950">
     <Navigation />
 
@@ -14,18 +13,25 @@ import GenerateSnackForm from "../components/snack-generation/GenerateSnackForm"
         <h1
           class="text-3xl sm:text-4xl font-bold mb-6 text-center bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 text-transparent bg-clip-text"
         >
-          Wygeneruj swoją idealną przekąskę
+          Twoje ulubione przekąski
         </h1>
         <p class="text-lg text-blue-100/80 text-center mb-10 max-w-2xl mx-auto">
-          Podaj swoje preferencje i pozwól AI znaleźć idealną przekąskę dostosowaną do Twoich potrzeb
+          Tutaj znajdziesz wszystkie przekąski, które zapisałeś jako ulubione
         </p>
 
         <div class="bg-white/5 backdrop-blur-lg rounded-xl p-6 sm:p-8 border border-white/10 shadow-lg">
-          <GenerateSnackForm client:load />
+          <div class="text-center text-white/70">
+            <p>Funkcjonalność ulubionych przekąsek będzie wkrótce dostępna.</p>
+            <p class="mt-2">
+              <a href="/generate" class="text-blue-200 hover:text-blue-300 transition-colors">
+                Wygeneruj swoją pierwszą przekąskę →
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </main>
 
     <Footer className="absolute bottom-0 w-full" />
   </div>
-</Layout>
+</Layout> 

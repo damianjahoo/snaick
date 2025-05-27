@@ -1,5 +1,6 @@
 ---
 // Navigation component for SnAIck application
+const user = Astro.locals.user;
 ---
 
 <!-- Header with navigation -->
@@ -7,20 +8,45 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center py-4">
       <div class="flex items-center">
-        <a href="/" class="text-2xl font-bold bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 text-transparent bg-clip-text">SnAIck</a>
+        <a
+          href="/"
+          class="text-2xl font-bold bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 text-transparent bg-clip-text"
+          >SnAIck</a
+        >
       </div>
-      
+
       <!-- Desktop Navigation -->
       <nav class="hidden md:flex space-x-8">
         <a href="/" class="text-white hover:text-blue-200 transition-colors">Strona główna</a>
-        <a href="/generate" class="text-white hover:text-blue-200 transition-colors">Znajdź przekąskę</a>
-        <a href="/favorites" class="text-white hover:text-blue-200 transition-colors">Ulubione</a>
-        <a href="/login" class="text-white hover:text-blue-200 transition-colors">Zaloguj się</a>
-        <a href="/register" class="text-white hover:text-blue-200 transition-colors">Zarejestruj się</a>
+        {user ? (
+          <>
+            <a href="/generate" class="text-white hover:text-blue-200 transition-colors">Znajdź przekąskę</a>
+            <a href="/favorites" class="text-white hover:text-blue-200 transition-colors">Ulubione</a>
+          </>
+        ) : null}
       </nav>
-      
+
+      <!-- User info and auth buttons -->
+      <div class="hidden md:flex items-center space-x-4">
+        {user ? (
+          <>
+            <span class="text-white/80">Cześć {user.email?.split('@')[0]}!</span>
+            <form action="/api/auth/logout" method="POST" class="inline">
+              <button type="submit" class="text-white hover:text-blue-200 transition-colors">
+                Wyloguj się
+              </button>
+            </form>
+          </>
+        ) : (
+          <>
+            <a href="/login" class="text-white hover:text-blue-200 transition-colors">Zaloguj się</a>
+            <a href="/register" class="text-white hover:text-blue-200 transition-colors">Zarejestruj się</a>
+          </>
+        )}
+      </div>
+
       <!-- Mobile menu button -->
-      <button 
+      <button
         id="menu-toggle"
         class="md:hidden text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
         aria-label="Menu"
@@ -31,29 +57,52 @@
       </button>
     </div>
   </div>
-  
+
   <!-- Mobile Navigation -->
   <div id="mobile-menu" class="hidden md:hidden bg-black/20 backdrop-blur-lg">
     <div class="px-2 pt-2 pb-3 space-y-1 border-t border-white/10">
       <a href="/" class="block px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors">Strona główna</a>
-      <a href="/generate" class="block px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors">Znajdź przekąskę</a>
-      <a href="/favorites" class="block px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors">Ulubione</a>
-      <a href="/login" class="block px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors">Zaloguj się</a>
-      <a href="/register" class="block px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors">Zarejestruj się</a>
+      {user ? (
+        <>
+          <a href="/generate" class="block px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors">
+            Znajdź przekąskę
+          </a>
+          <a href="/favorites" class="block px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors">
+            Ulubione
+          </a>
+          <div class="px-3 py-2 text-white/80 text-sm">
+            Cześć {user.email?.split('@')[0]}!
+          </div>
+          <form action="/api/auth/logout" method="POST" class="block">
+            <button type="submit" class="w-full text-left px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors">
+              Wyloguj się
+            </button>
+          </form>
+        </>
+      ) : (
+        <>
+          <a href="/login" class="block px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors">
+            Zaloguj się
+          </a>
+          <a href="/register" class="block px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors">
+            Zarejestruj się
+          </a>
+        </>
+      )}
     </div>
   </div>
 </header>
 
 <script>
   // Toggle mobile menu
-  document.addEventListener('DOMContentLoaded', () => {
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuToggle = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+
     if (menuToggle && mobileMenu) {
-      menuToggle.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
+      menuToggle.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
       });
     }
   });
-</script> 
+</script>
