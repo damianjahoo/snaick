@@ -1,5 +1,4 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
 interface FormStepProps {
   title: string;
@@ -10,17 +9,19 @@ interface FormStepProps {
 
 export function FormStep({ title, description, isOptional = false, children }: FormStepProps) {
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle className="text-2xl">{title}</CardTitle>
+    <div className="w-full">
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-2xl font-bold text-white">{title}</h2>
           {isOptional && (
-            <span className="text-sm text-muted-foreground px-2 py-1 bg-muted rounded-md">Opcjonalnie</span>
+            <span className="text-sm text-blue-100/70 px-3 py-1 bg-white/10 rounded-lg backdrop-blur-sm border border-white/20">
+              Opcjonalnie
+            </span>
           )}
         </div>
-        {description && <CardDescription>{description}</CardDescription>}
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-    </Card>
+        {description && <p className="text-blue-100/80">{description}</p>}
+      </div>
+      <div className="text-white">{children}</div>
+    </div>
   );
 }

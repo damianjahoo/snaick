@@ -41,18 +41,23 @@ export function FormStepMeals({ state, dispatch, onNext }: StepProps) {
           value={localMeals}
           onChange={handleChange}
           rows={5}
+          className="bg-white/5 border-white/20 text-white placeholder:text-blue-100/50 focus-visible:ring-blue-300/50 focus-visible:border-blue-200/70 resize-none"
           aria-invalid={error ? "true" : "false"}
           aria-describedby={error ? "meals-error" : undefined}
         />
 
         {error && (
-          <p id="meals-error" className="text-sm text-red-500">
+          <p id="meals-error" className="text-sm text-red-300">
             {error}
           </p>
         )}
 
         <div className="flex justify-end pt-4">
-          <Button type="button" onClick={handleNext}>
+          <Button
+            type="button"
+            onClick={handleNext}
+            className="bg-blue-200 text-black hover:bg-blue-300 focus-visible:ring-blue-300/50"
+          >
             Dalej
           </Button>
         </div>

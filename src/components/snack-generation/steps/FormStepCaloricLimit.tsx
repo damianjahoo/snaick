@@ -93,17 +93,17 @@ export function FormStepCaloricLimit({ state, dispatch, onNext, onPrev, onSkip }
               value={caloricLimit === null ? "" : caloricLimit}
               onChange={handleInputChange}
               placeholder={`np. ${DEFAULT_CALORIES}`}
-              className="w-24"
+              className="w-24 bg-white/5 border-white/20 text-white placeholder:text-blue-100/50 focus-visible:ring-blue-300/50 focus-visible:border-blue-200/70"
               min={MIN_CALORIES}
               max={MAX_CALORIES}
               aria-invalid={error ? "true" : "false"}
               aria-describedby={error ? "caloric-limit-error" : undefined}
             />
-            <span className="text-md font-medium">kcal</span>
+            <span className="text-md font-medium text-white">kcal</span>
           </div>
 
           {error && (
-            <p id="caloric-limit-error" className="text-sm text-red-500">
+            <p id="caloric-limit-error" className="text-sm text-red-300">
               {error}
             </p>
           )}
@@ -116,29 +116,39 @@ export function FormStepCaloricLimit({ state, dispatch, onNext, onPrev, onSkip }
               step={10}
               onValueChange={handleSliderChange}
               value={[caloricLimit === null ? DEFAULT_CALORIES : caloricLimit]}
+              className="[&_[role=slider]]:bg-blue-200 [&_[role=slider]]:border-blue-200 [&_[role=slider]]:ring-blue-200/50 [&>span:first-child]:bg-white/20 [&>span:last-child]:bg-blue-200"
             />
-            <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+            <div className="flex justify-between mt-2 text-xs text-blue-100/70">
               <span>{MIN_CALORIES} kcal</span>
               <span>{MAX_CALORIES} kcal</span>
             </div>
           </div>
 
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-blue-100/70">
             Możesz pominąć ten krok, jeśli nie chcesz określać limitu kalorycznego.
           </p>
         </div>
 
         <div className="flex justify-between pt-4">
-          <Button type="button" variant="outline" onClick={onPrev}>
+          <Button
+            type="button"
+            onClick={onPrev}
+            className="bg-white/10 border border-white/30 text-white hover:bg-white/20 hover:border-white/40 transition-all"
+          >
             Wstecz
           </Button>
           <div className="space-x-2">
-            <Button type="button" variant="outline" onClick={handleSkip}>
+            <Button
+              type="button"
+              onClick={handleSkip}
+              className="bg-white/10 border border-white/30 text-white hover:bg-white/20 hover:border-white/40 transition-all"
+            >
               Pomiń
             </Button>
             <Button
               type="button"
               onClick={handleSubmit}
+              className="bg-blue-200 text-black hover:bg-blue-300 focus-visible:ring-blue-300/50"
               disabled={
                 !!error && (caloricLimit === null || caloricLimit < MIN_CALORIES || caloricLimit > MAX_CALORIES)
               }

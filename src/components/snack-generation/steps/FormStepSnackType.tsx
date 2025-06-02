@@ -78,8 +78,10 @@ export function FormStepSnackType({ state, dispatch, onNext, onPrev }: StepProps
           {snackTypeOptions.map((option) => (
             <div
               key={option.value}
-              className={`flex flex-col p-4 rounded-md border cursor-pointer hover:border-primary ${
-                selectedType === option.value ? "border-primary bg-primary/5" : "border-gray-200"
+              className={`flex flex-col p-4 rounded-lg border cursor-pointer transition-all ${
+                selectedType === option.value
+                  ? "border-blue-200 bg-blue-200/10 shadow-lg"
+                  : "border-white/20 bg-white/5 hover:border-blue-200/50 hover:bg-white/10"
               }`}
               onClick={() => handleTypeChange(option.value)}
               role="button"
@@ -92,23 +94,31 @@ export function FormStepSnackType({ state, dispatch, onNext, onPrev }: StepProps
                 </div>
                 <div className="flex-1">
                   <RadioGroupItem value={option.value} id={option.value} className="sr-only" />
-                  <Label htmlFor={option.value} className="text-base font-medium cursor-pointer">
+                  <Label htmlFor={option.value} className="text-base font-medium cursor-pointer text-white">
                     {option.label}
                   </Label>
-                  <p className="text-sm text-muted-foreground">{option.description}</p>
+                  <p className="text-sm text-blue-100/70">{option.description}</p>
                 </div>
               </div>
             </div>
           ))}
         </RadioGroup>
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && <p className="text-sm text-red-300">{error}</p>}
 
         <div className="flex justify-between pt-4">
-          <Button type="button" variant="outline" onClick={onPrev}>
+          <Button
+            type="button"
+            onClick={onPrev}
+            className="bg-white/10 border border-white/30 text-white hover:bg-white/20 hover:border-white/40 transition-all"
+          >
             Wstecz
           </Button>
-          <Button type="button" onClick={handleNext}>
+          <Button
+            type="button"
+            onClick={handleNext}
+            className="bg-blue-200 text-black hover:bg-blue-300 focus-visible:ring-blue-300/50"
+          >
             Dalej
           </Button>
         </div>

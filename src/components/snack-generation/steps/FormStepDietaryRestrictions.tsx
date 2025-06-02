@@ -70,14 +70,18 @@ export function FormStepDietaryRestrictions({ state, dispatch, onNext, onPrev, o
       isOptional={true}
     >
       <div className="space-y-6">
-        <div className="flex flex-wrap gap-2 p-3 border rounded-md min-h-[100px]">
+        <div className="flex flex-wrap gap-2 p-3 border border-white/20 rounded-lg min-h-[100px] bg-white/5">
           {restrictions.map((restriction, index) => (
-            <Badge key={index} variant="secondary" className="pl-2 h-7">
+            <Badge
+              key={index}
+              variant="secondary"
+              className="pl-2 h-7 bg-blue-200/20 text-blue-100 border-blue-200/30 hover:bg-blue-200/30"
+            >
               {restriction}
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-5 w-5 p-0 ml-1 hover:bg-transparent"
+                className="h-5 w-5 p-0 ml-1 hover:bg-transparent text-blue-100 hover:text-blue-200"
                 onClick={() => removeRestriction(index)}
               >
                 <Cross2Icon className="h-3 w-3" />
@@ -90,19 +94,23 @@ export function FormStepDietaryRestrictions({ state, dispatch, onNext, onPrev, o
             value={inputValue}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            className="flex-1 min-w-[150px] border-0 focus-visible:ring-0 p-0 h-7"
+            className="flex-1 min-w-[150px] border-0 focus-visible:ring-0 p-0 h-7 bg-transparent text-white placeholder:text-blue-100/50"
             placeholder={restrictions.length === 0 ? "Dodaj wykluczenia żywieniowe..." : "Dodaj więcej..."}
           />
         </div>
 
         <div>
-          <p className="text-sm text-muted-foreground mb-2">Popularne alergeny i ograniczenia:</p>
+          <p className="text-sm text-blue-100/70 mb-2">Popularne alergeny i ograniczenia:</p>
           <div className="flex flex-wrap gap-2">
             {commonAllergens.map((allergen) => (
               <Badge
                 key={allergen}
                 variant={restrictions.includes(allergen) ? "default" : "outline"}
-                className="cursor-pointer"
+                className={`cursor-pointer transition-all ${
+                  restrictions.includes(allergen)
+                    ? "bg-blue-200 text-black hover:bg-blue-300"
+                    : "border-white/30 text-blue-100 hover:bg-white/10 hover:border-blue-200/50"
+                }`}
                 onClick={() => handleCommonRestrictionClick(allergen)}
               >
                 {allergen}
@@ -112,14 +120,26 @@ export function FormStepDietaryRestrictions({ state, dispatch, onNext, onPrev, o
         </div>
 
         <div className="flex justify-between pt-4">
-          <Button type="button" variant="outline" onClick={onPrev}>
+          <Button
+            type="button"
+            onClick={onPrev}
+            className="bg-white/10 border border-white/30 text-white hover:bg-white/20 hover:border-white/40 transition-all"
+          >
             Wstecz
           </Button>
           <div className="space-x-2">
-            <Button type="button" variant="outline" onClick={handleSkip}>
+            <Button
+              type="button"
+              onClick={handleSkip}
+              className="bg-white/10 border border-white/30 text-white hover:bg-white/20 hover:border-white/40 transition-all"
+            >
               Pomiń
             </Button>
-            <Button type="button" onClick={handleNext}>
+            <Button
+              type="button"
+              onClick={handleNext}
+              className="bg-blue-200 text-black hover:bg-blue-300 focus-visible:ring-blue-300/50"
+            >
               Dalej
             </Button>
           </div>

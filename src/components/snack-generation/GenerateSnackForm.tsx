@@ -230,14 +230,14 @@ export default function GenerateSnackForm() {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6">
+    <div className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-6">
       {!state.recommendation && <SnackFormProgress currentStep={state.currentStep} totalSteps={state.totalSteps} />}
 
       {state.error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 relative">
+        <div className="bg-red-900/20 border border-red-500/30 text-red-200 px-4 py-3 rounded-lg mb-4 relative backdrop-blur-sm">
           <span className="block sm:inline">{state.error}</span>
           <button
-            className="absolute top-0 bottom-0 right-0 px-4 py-3"
+            className="absolute top-0 bottom-0 right-0 px-4 py-3 text-red-200 hover:text-red-100 transition-colors"
             onClick={() => dispatch({ type: "CLEAR_ERROR" })}
           >
             <span className="sr-only">Zamknij</span>
