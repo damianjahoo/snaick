@@ -279,3 +279,94 @@ export interface JSONSchema {
   required?: string[];
   [key: string]: unknown;
 }
+
+// ----------------------
+// Favorites View Models
+// ----------------------
+
+/**
+ * View model for the favorites page
+ */
+export interface FavoritesPageViewModel {
+  favorites: FavoriteListItemResponse[];
+  meta: PaginationMeta;
+  loading: boolean;
+  error: string | null;
+}
+
+/**
+ * View model for the favorite details modal
+ */
+export interface ModalViewModel {
+  isOpen: boolean;
+  selectedFavoriteId: number | null;
+  favoriteDetails: FavoriteDetailsResponse | null;
+  loading: boolean;
+  error: string | null;
+}
+
+/**
+ * View model for the confirm dialog
+ */
+export interface ConfirmDialogViewModel {
+  isOpen: boolean;
+  favoriteToDelete: FavoriteListItemResponse | null;
+  loading: boolean;
+}
+
+/**
+ * State for pagination component
+ */
+export interface PaginationState {
+  currentPage: number;
+  loading: boolean;
+}
+
+/**
+ * Data structure for nutrition information
+ */
+export interface NutritionData {
+  kcal: number;
+  protein: number;
+  fat: number;
+  carbohydrates: number;
+  fibre: number;
+}
+
+// ----------------------
+// Custom Hook Return Types
+// ----------------------
+
+/**
+ * Return type for useFavorites hook
+ */
+export interface UseFavoritesReturn {
+  favorites: FavoriteListItemResponse[];
+  meta: PaginationMeta;
+  loading: boolean;
+  error: string | null;
+  currentPage: number;
+  loadPage: (page: number) => Promise<void>;
+  removeFavorite: (favoriteId: number) => Promise<void>;
+  refreshList: () => Promise<void>;
+}
+
+/**
+ * Return type for useFavoriteDetails hook
+ */
+export interface UseFavoriteDetailsReturn {
+  favoriteDetails: FavoriteDetailsResponse | null;
+  loading: boolean;
+  error: string | null;
+  loadDetails: (favoriteId: number) => Promise<void>;
+  clearDetails: () => void;
+}
+
+/**
+ * Return type for useModal hook
+ */
+export interface UseModalReturn {
+  isOpen: boolean;
+  openModal: (favoriteId: number) => void;
+  closeModal: () => void;
+}

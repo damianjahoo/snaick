@@ -52,8 +52,6 @@ export const GET: APIRoute = async ({ params, request, cookies, locals }) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("GET /api/favorites/[id] error:", error);
-
     // Handle specific business logic errors
     if (error instanceof Error && error.message === "Favorite not found") {
       return new Response(JSON.stringify({ error: "Favorite not found" }), {
@@ -120,8 +118,6 @@ export const DELETE: APIRoute = async ({ params, request, cookies, locals }) => 
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("DELETE /api/favorites/[id] error:", error);
-
     // Handle specific business logic errors
     if (error instanceof Error && error.message === "Favorite not found") {
       return new Response(JSON.stringify({ error: "Favorite not found" }), {

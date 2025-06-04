@@ -1,0 +1,11 @@
+---
+import { FavoritesList } from './FavoritesList';
+
+interface Props {
+  userId: string;
+}
+
+const { userId } = Astro.props;
+---
+
+<FavoritesList client:load userId={userId} /> 

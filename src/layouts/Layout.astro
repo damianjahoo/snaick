@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import "../styles/snaick-theme.css";
+import { Toaster } from "../components/ui/sonner";
 
 interface Props {
   title?: string;
@@ -34,6 +35,7 @@ const { title = "SnAIck - Zdrowe przekąski dopasowane do Ciebie" } = Astro.prop
   </head>
   <body>
     <slot />
+    <Toaster client:load />
   </body>
 </html>
 

@@ -11,6 +11,7 @@ import { FormStepCaloricLimit } from "./steps/FormStepCaloricLimit";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { SnackRecommendation } from "./SnackRecommendation";
 import { useSnackGeneration } from "../../lib/hooks/useSnackGeneration";
+import { toast } from "sonner";
 import type { FormAction, FormState, GenerateSnackRequest } from "../../lib/types/snack-form.types";
 
 const initialState: FormState = {
@@ -139,20 +140,36 @@ export default function GenerateSnackForm() {
     if (!state.recommendation) return;
 
     try {
-      const response = await fetch("/api/snacks/favorites", {
+      const response = await fetch("/api/favorites/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ snack_id: state.recommendation.id }),
+        credentials: "include",
       });
 
       if (!response.ok) {
-        throw new Error("Nie udało się zapisać przekąski do ulubionych");
+        const errorData = await response.json();
+
+        // Handle specific error cases
+        if (response.status === 409) {
+          throw new Error("Ta przekąska już znajduje się w Twoich ulubionych");
+        } else if (response.status === 404) {
+          throw new Error("Nie znaleziono przekąski");
+        } else if (response.status === 401) {
+          throw new Error("Musisz być zalogowany, aby dodać przekąskę do ulubionych");
+        } else {
+          // For RLS errors, provide more specific message
+          if (errorData.message && errorData.message.includes("row-level security policy")) {
+            throw new Error("Problem z uwierzytelnieniem. Spróbuj się wylogować i zalogować ponownie.");
+          }
+          throw new Error(errorData.error || "Nie udało się zapisać przekąski do ulubionych");
+        }
       }
 
-      // Show success message (could be implemented with a toast notification)
-      alert("Przekąska dodana do ulubionych");
+      // Show success toast instead of alert
+      toast.success("Przekąska dodana do ulubionych");
     } catch (error) {
       dispatch({
         type: "SET_ERROR",
