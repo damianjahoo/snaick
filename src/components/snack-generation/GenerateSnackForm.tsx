@@ -12,73 +12,16 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { SnackRecommendation } from "./SnackRecommendation";
 import { useSnackGeneration } from "../../lib/hooks/useSnackGeneration";
 import { toast } from "sonner";
-import type { FormAction, FormState, GenerateSnackRequest } from "../../lib/types/snack-form.types";
-
-const initialState: FormState = {
-  currentStep: 1,
-  totalSteps: 7,
-  meals_eaten: "",
-  snack_type: "słodka",
-  location: "praca",
-  goal: "utrzymanie",
-  preferred_diet: "standard",
-  dietary_restrictions: [],
-  caloric_limit: null,
-  isLoading: false,
-  recommendation: null,
-  error: null,
-};
-
-function formReducer(state: FormState, action: FormAction): FormState {
-  switch (action.type) {
-    case "SET_MEALS":
-      return { ...state, meals_eaten: action.payload };
-    case "SET_SNACK_TYPE":
-      return { ...state, snack_type: action.payload };
-    case "SET_LOCATION":
-      return { ...state, location: action.payload };
-    case "SET_GOAL":
-      return { ...state, goal: action.payload };
-    case "SET_PREFERRED_DIET":
-      return { ...state, preferred_diet: action.payload };
-    case "SET_DIETARY_RESTRICTIONS":
-      return { ...state, dietary_restrictions: action.payload };
-    case "SET_CALORIC_LIMIT":
-      return { ...state, caloric_limit: action.payload };
-    case "NEXT_STEP":
-      return {
-        ...state,
-        currentStep: state.currentStep < state.totalSteps ? state.currentStep + 1 : state.currentStep,
-      };
-    case "PREV_STEP":
-      return {
-        ...state,
-        currentStep: state.currentStep > 1 ? state.currentStep - 1 : state.currentStep,
-      };
-    case "SKIP_STEP":
-      return {
-        ...state,
-        currentStep: state.currentStep < state.totalSteps ? state.currentStep + 1 : state.currentStep,
-      };
-    case "SET_LOADING":
-      return { ...state, isLoading: action.payload };
-    case "SET_RECOMMENDATION":
-      return { ...state, recommendation: action.payload, isLoading: false };
-    case "CLEAR_RECOMMENDATION":
-      return { ...state, recommendation: null };
-    case "SET_ERROR":
-      return { ...state, error: action.payload, isLoading: false };
-    case "CLEAR_ERROR":
-      return { ...state, error: null };
-    case "RESET_FORM":
-      return { ...initialState };
-    default:
-      return state;
-  }
-}
+import { formReducer, initialFormState } from "../../lib/utils/form-reducer";
+import { validateRequiredFields, transformFormStateToRequest } from "../../lib/utils/form-validation";
+import {
+  mapFavoritesError,
+  createFavoritesPayload,
+  createFavoritesRequestOptions,
+} from "../../lib/utils/favorites-error-handler";
 
 export default function GenerateSnackForm() {
-  const [state, dispatch] = useReducer(formReducer, initialState);
+  const [state, dispatch] = useReducer(formReducer, initialFormState);
   const { generateSnack } = useSnackGeneration();
 
   // Animation direction state
@@ -100,23 +43,16 @@ export default function GenerateSnackForm() {
   };
 
   const handleSubmit = async () => {
-    if (!state.snack_type || !state.location || !state.goal || !state.preferred_diet || !state.meals_eaten) {
-      dispatch({ type: "SET_ERROR", payload: "Proszę wypełnić wszystkie wymagane pola formularza" });
+    const validationError = validateRequiredFields(state);
+    if (validationError) {
+      dispatch({ type: "SET_ERROR", payload: validationError });
       return;
     }
 
     dispatch({ type: "SET_LOADING", payload: true });
     try {
       // Prepare form data
-      const formData: GenerateSnackRequest = {
-        meals_eaten: state.meals_eaten,
-        snack_type: state.snack_type,
-        location: state.location,
-        goal: state.goal,
-        preferred_diet: state.preferred_diet,
-        dietary_restrictions: state.dietary_restrictions,
-        caloric_limit: state.caloric_limit,
-      };
+      const formData = transformFormStateToRequest(state);
 
       // Call API
       const recommendation = await generateSnack(formData);
@@ -140,32 +76,15 @@ export default function GenerateSnackForm() {
     if (!state.recommendation) return;
 
     try {
-      const response = await fetch("/api/favorites/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ snack_id: state.recommendation.id }),
-        credentials: "include",
-      });
+      const payload = createFavoritesPayload(state.recommendation.id);
+      const options = createFavoritesRequestOptions(payload);
+
+      const response = await fetch("/api/favorites/add", options);
 
       if (!response.ok) {
         const errorData = await response.json();
-
-        // Handle specific error cases
-        if (response.status === 409) {
-          throw new Error("Ta przekąska już znajduje się w Twoich ulubionych");
-        } else if (response.status === 404) {
-          throw new Error("Nie znaleziono przekąski");
-        } else if (response.status === 401) {
-          throw new Error("Musisz być zalogowany, aby dodać przekąskę do ulubionych");
-        } else {
-          // For RLS errors, provide more specific message
-          if (errorData.message && errorData.message.includes("row-level security policy")) {
-            throw new Error("Problem z uwierzytelnieniem. Spróbuj się wylogować i zalogować ponownie.");
-          }
-          throw new Error(errorData.error || "Nie udało się zapisać przekąski do ulubionych");
-        }
+        const errorMessage = mapFavoritesError(response.status, errorData);
+        throw new Error(errorMessage);
       }
 
       // Show success toast instead of alert
