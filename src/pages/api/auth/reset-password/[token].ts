@@ -53,8 +53,6 @@ export const POST: APIRoute = async ({ request, params, cookies }) => {
     });
 
     if (error) {
-      console.error("Password reset confirmation error:", error);
-
       if (error.message.includes("Invalid token") || error.message.includes("Token expired")) {
         return new Response(
           JSON.stringify({ message: "Token jest nieprawidłowy lub wygasł. Poproś o nowy link do resetu hasła." }),
@@ -81,9 +79,7 @@ export const POST: APIRoute = async ({ request, params, cookies }) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-  } catch (error) {
-    console.error("Password reset confirmation endpoint error:", error);
-
+  } catch {
     return new Response(JSON.stringify({ message: "Wewnętrzny błąd serwera" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

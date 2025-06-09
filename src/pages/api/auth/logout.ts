@@ -15,7 +15,6 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      console.error("Logout error:", error);
       return new Response(JSON.stringify({ message: "Błąd podczas wylogowania" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
@@ -24,9 +23,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
 
     // Redirect to home page after successful logout
     return redirect("/");
-  } catch (error) {
-    console.error("Logout endpoint error:", error);
-
+  } catch {
     return new Response(JSON.stringify({ message: "Wewnętrzny błąd serwera" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

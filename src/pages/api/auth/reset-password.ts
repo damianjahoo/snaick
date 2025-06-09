@@ -40,7 +40,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
 
     if (error) {
-      console.error("Password reset request error:", error);
       return new Response(JSON.stringify({ message: "Błąd podczas wysyłania emaila z resetem hasła" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
@@ -57,9 +56,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-  } catch (error) {
-    console.error("Password reset endpoint error:", error);
-
+  } catch {
     return new Response(JSON.stringify({ message: "Wewnętrzny błąd serwera" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
