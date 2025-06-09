@@ -39,21 +39,14 @@ export const onRequest = defineMiddleware(async (context, next) => {
     // IMPORTANT: Always get user session first before any other operations
     const {
       data: { user },
-      error: authError,
     } = await supabase.auth.getUser();
 
-    if (authError) {
-      console.error("Supabase auth error in middleware:", authError);
-    }
-
     if (user) {
-      console.log("User authenticated in middleware:", { id: user.id, email: user.email });
       (locals as typeof locals & { user: { id: string; email: string | undefined } | null }).user = {
         email: user.email,
         id: user.id,
       };
     } else {
-      console.log("No user found in middleware for path:", url.pathname);
       (locals as typeof locals & { user: { id: string; email: string | undefined } | null }).user = null;
     }
 
