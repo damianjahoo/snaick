@@ -1,5 +1,5 @@
 ---
-import { FavoritesList } from './FavoritesList';
+import { FavoritesList } from "./FavoritesList";
 
 interface Props {
   userId: string;
@@ -8,4 +8,4 @@ interface Props {
 const { userId } = Astro.props;
 ---
 
-<FavoritesList client:load userId={userId} /> 
+<FavoritesList client:load userId={userId} />

@@ -8,7 +8,7 @@ import FavoritesListWrapper from "../components/favorites/FavoritesListWrapper.a
 const user = Astro.locals.user;
 
 if (!user) {
-  return Astro.redirect('/login');
+  return Astro.redirect("/login");
 }
 ---
 
@@ -26,7 +26,8 @@ if (!user) {
             Twoje ulubione przekąski
           </h1>
           <p class="text-lg text-blue-100/80 max-w-2xl mx-auto">
-            Tutaj znajdziesz wszystkie przekąski, które zapisałeś jako ulubione. Możesz przeglądać szczegóły i zarządzać swoją kolekcją.
+            Tutaj znajdziesz wszystkie przekąski, które zapisałeś jako ulubione. Możesz przeglądać szczegóły i zarządzać
+            swoją kolekcją.
           </p>
         </div>
 
@@ -37,4 +38,4 @@ if (!user) {
 
     <Footer className="absolute bottom-0 w-full" />
   </div>
-</Layout> 
+</Layout>
