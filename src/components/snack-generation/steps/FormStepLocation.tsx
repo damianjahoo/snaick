@@ -76,17 +76,14 @@ export function FormStepLocation({ state, dispatch, onNext, onPrev }: StepProps)
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           {locationOptions.map((option) => (
-            <div
+            <Label
               key={option.value}
+              htmlFor={option.value}
               className={`flex flex-col p-4 rounded-lg border cursor-pointer transition-all ${
                 selectedLocation === option.value
                   ? "border-blue-200 bg-blue-200/10 shadow-lg"
                   : "border-white/20 bg-white/5 hover:border-blue-200/50 hover:bg-white/10"
               }`}
-              onClick={() => handleLocationChange(option.value)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === "Enter" && handleLocationChange(option.value)}
             >
               <div className="flex items-center space-x-3">
                 <div className="text-2xl" aria-hidden="true">
@@ -94,13 +91,11 @@ export function FormStepLocation({ state, dispatch, onNext, onPrev }: StepProps)
                 </div>
                 <div className="flex-1">
                   <RadioGroupItem value={option.value} id={option.value} className="sr-only" />
-                  <Label htmlFor={option.value} className="text-base font-medium cursor-pointer text-white">
-                    {option.label}
-                  </Label>
-                  <p className="text-sm text-blue-100/70">{option.description}</p>
+                  <span className="text-base font-medium text-white">{option.label}</span>
+                  <p className="text-sm text-blue-100/70 mt-1">{option.description}</p>
                 </div>
               </div>
-            </div>
+            </Label>
           ))}
         </RadioGroup>
 

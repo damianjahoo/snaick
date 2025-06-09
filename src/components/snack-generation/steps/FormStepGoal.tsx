@@ -70,15 +70,14 @@ export function FormStepGoal({ state, dispatch, onNext, onPrev }: StepProps) {
           className="space-y-3"
         >
           {goalOptions.map((option) => (
-            <button
+            <Label
               key={option.value}
-              className={`flex items-start p-4 rounded-lg border w-full text-left transition-all ${
+              htmlFor={option.value}
+              className={`flex items-start p-4 rounded-lg border w-full cursor-pointer transition-all ${
                 selectedGoal === option.value
                   ? "border-blue-200 bg-blue-200/10 shadow-lg"
                   : "border-white/20 bg-white/5 hover:border-blue-200/50 hover:bg-white/10"
               }`}
-              onClick={() => handleGoalChange(option.value)}
-              type="button"
             >
               <div className="flex items-start space-x-3 w-full">
                 <div className="text-2xl mt-1" aria-hidden="true">
@@ -86,13 +85,11 @@ export function FormStepGoal({ state, dispatch, onNext, onPrev }: StepProps) {
                 </div>
                 <div className="flex-1">
                   <RadioGroupItem value={option.value} id={option.value} className="sr-only" />
-                  <Label htmlFor={option.value} className="text-base font-medium cursor-pointer text-white">
-                    {option.label}
-                  </Label>
-                  <p className="text-sm text-blue-100/70">{option.description}</p>
+                  <span className="text-base font-medium text-white">{option.label}</span>
+                  <p className="text-sm text-blue-100/70 mt-1">{option.description}</p>
                 </div>
               </div>
-            </button>
+            </Label>
           ))}
         </RadioGroup>
 

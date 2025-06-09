@@ -76,25 +76,22 @@ export function FormStepPreferredDiet({ state, dispatch, onNext, onPrev }: StepP
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           {dietOptions.map((option) => (
-            <button
+            <Label
               key={option.value}
-              className={`flex flex-col text-left p-4 rounded-lg border cursor-pointer transition-all ${
+              htmlFor={option.value}
+              className={`flex flex-col p-4 rounded-lg border cursor-pointer transition-all ${
                 selectedDiet === option.value
                   ? "border-blue-200 bg-blue-200/10 shadow-lg"
                   : "border-white/20 bg-white/5 hover:border-blue-200/50 hover:bg-white/10"
               }`}
-              onClick={() => handleDietChange(option.value)}
-              type="button"
             >
               <RadioGroupItem value={option.value} id={option.value} className="sr-only" />
               <div className="flex items-center">
                 <span className="text-xl mr-2">{option.icon}</span>
-                <Label htmlFor={option.value} className="text-base font-medium cursor-pointer text-white">
-                  {option.label}
-                </Label>
+                <span className="text-base font-medium text-white">{option.label}</span>
               </div>
               <p className="text-sm text-blue-100/70 mt-1">{option.description}</p>
-            </button>
+            </Label>
           ))}
         </RadioGroup>
 
