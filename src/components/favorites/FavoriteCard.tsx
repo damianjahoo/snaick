@@ -1,11 +1,5 @@
 import React from "react";
-import type { FavoriteListItemResponse } from "../../types";
-
-interface FavoriteCardProps {
-  favorite: FavoriteListItemResponse;
-  onViewDetails: (id: number) => void;
-  onRemove: (favorite: FavoriteListItemResponse) => void;
-}
+import type { FavoriteCardProps } from "../../types";
 
 export const FavoriteCard = React.memo(function FavoriteCard({ favorite, onViewDetails, onRemove }: FavoriteCardProps) {
   const handleViewDetails = () => {
@@ -25,9 +19,9 @@ export const FavoriteCard = React.memo(function FavoriteCard({ favorite, onViewD
   };
 
   return (
-    <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all duration-200 hover:transform hover:scale-[1.02] focus-within:ring-2 focus-within:ring-blue-400/50 focus-within:border-blue-400/50">
+    <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all duration-200 hover:transform hover:scale-[1.02] focus-within:ring-2 focus-within:ring-blue-400/50 focus-within:border-blue-400/50 min-h-[280px] flex flex-col">
       {/* Card Header */}
-      <div className="mb-4">
+      <div className="mb-4 flex-grow">
         <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2 leading-tight">{favorite.title}</h3>
         <p className="text-blue-100/80 text-sm mb-3 line-clamp-3 leading-relaxed">{favorite.description}</p>
       </div>
@@ -41,7 +35,7 @@ export const FavoriteCard = React.memo(function FavoriteCard({ favorite, onViewD
       </div>
 
       {/* Card Actions */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 mt-auto">
         <button
           onClick={handleViewDetails}
           className="flex-1 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 focus:bg-blue-500/30 text-blue-200 rounded-lg transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-400/50 active:scale-95 transform"

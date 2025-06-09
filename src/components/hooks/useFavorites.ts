@@ -4,7 +4,7 @@ import type { UseFavoritesReturn, FavoriteListResponse, FavoriteListItemResponse
 const DEFAULT_META: PaginationMeta = {
   total: 0,
   page: 1,
-  limit: 5,
+  limit: 6,
   has_more: false,
 };
 
@@ -22,7 +22,7 @@ export function useFavorites(): UseFavoritesReturn {
     setError(null);
 
     try {
-      const response = await fetch(`/api/favorites?page=${page}&limit=5`);
+      const response = await fetch(`/api/favorites?page=${page}&limit=6`);
 
       if (response.status === 401) {
         window.location.href = "/login";

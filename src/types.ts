@@ -334,6 +334,19 @@ export interface NutritionData {
 }
 
 // ----------------------
+// Component Props Types
+// ----------------------
+
+/**
+ * Props for FavoriteCard component
+ */
+export interface FavoriteCardProps {
+  favorite: FavoriteListItemResponse;
+  onViewDetails: (id: number) => void;
+  onRemove: (favorite: FavoriteListItemResponse) => void;
+}
+
+// ----------------------
 // Custom Hook Return Types
 // ----------------------
 

@@ -99,7 +99,7 @@ Interfejs jest zaprojektowany tak, aby priorytetowo traktować generowanie przek
 - **Kluczowe komponenty:** 
   - Karty przekąsek (nazwa, krótki opis, wartość kaloryczna)
   - Przycisk "Dodaj do ulubionych" przy każdej karcie
-  - Paginacja (5 elementów na stronę)
+  - Paginacja (6 elementów na stronę)
 - **UX/Dostępność/Bezpieczeństwo:** 
   - Responsywny układ kart
   - Toast bar z potwierdzeniem po dodaniu do ulubionych
@@ -112,7 +112,7 @@ Interfejs jest zaprojektowany tak, aby priorytetowo traktować generowanie przek
 - **Kluczowe komponenty:** 
   - Karty przekąsek jako prostokątne bloki
   - Przycisk "Usuń z ulubionych" przy każdej karcie
-  - Paginacja (5 elementów na stronę)
+  - Paginacja (6 elementów na stronę)
 - **UX/Dostępność/Bezpieczeństwo:** 
   - Responsywna siatka skalująca się w zależności od szerokości ekranu
   - Potwierdzenie przed usunięciem z ulubionych
@@ -221,7 +221,7 @@ Listy przekąsek będą miały następującą nawigację:
 
 - Nagłówek z tytułem sekcji
 - Karty przekąsek w układzie siatki
-- Paginacja na dole strony (5 elementów na stronę)
+- Paginacja na dole strony (6 elementów na stronę)
 - Możliwość kliknięcia na kartę, aby otworzyć modal ze szczegółami
 
 ## 5. Kluczowe komponenty
@@ -254,4 +254,4 @@ Komponent powiadomień typu toast, wyświetlany na dole ekranu po wykonaniu akcj
 Responsywna siatka do wyświetlania kart przekąsek, automatycznie dostosowująca się do szerokości ekranu.
 
 ### 5.10. Pagination
-Komponent paginacji używany w widokach list, z konfiguracją 5 elementów na stronę. 
+Komponent paginacji używany w widokach list, z konfiguracją 6 elementów na stronę. 

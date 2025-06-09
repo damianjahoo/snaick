@@ -193,7 +193,7 @@ interface UseToastReturn {
 ## 7. Integracja API
 
 ### GET /api/favorites
-- **Żądanie:** Query params: page (number), limit (number, default 5)
+- **Żądanie:** Query params: page (number), limit (number, default 6)
 - **Odpowiedź:** `FavoriteListResponse`
 - **Użycie:** Ładowanie listy ulubionych z paginacją
 - **Error handling:** 401 → redirect login, 500 → error message
@@ -215,7 +215,7 @@ interface UseToastReturn {
 ### Główne przepływy:
 1. **Przeglądanie listy:**
    - Użytkownik wchodzi na /favorites
-   - System ładuje pierwszą stronę (5 elementów)
+   - System ładuje pierwszą stronę (6 elementów)
    - Wyświetlenie kart z podstawowymi informacjami
 
 2. **Wyświetlenie szczegółów:**
