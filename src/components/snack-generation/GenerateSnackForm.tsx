@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useReducer, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { SnackFormProgress } from "./SnackFormProgress";
 import { FormStepMeals } from "./steps/FormStepMeals";
@@ -10,7 +10,7 @@ import { FormStepDietaryRestrictions } from "./steps/FormStepDietaryRestrictions
 import { FormStepCaloricLimit } from "./steps/FormStepCaloricLimit";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { SnackRecommendation } from "./SnackRecommendation";
-import { useSnackGeneration } from "../../lib/hooks/useSnackGeneration";
+import { useSnackGeneration } from "../hooks/useSnackGeneration";
 import { toast } from "sonner";
 import { formReducer, initialFormState } from "../../lib/utils/form-reducer";
 import { validateRequiredFields, transformFormStateToRequest } from "../../lib/utils/form-validation";
@@ -27,22 +27,22 @@ export default function GenerateSnackForm() {
   // Animation direction state
   const [direction, setDirection] = useState<"left" | "right">("right");
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setDirection("right");
     dispatch({ type: "NEXT_STEP" });
-  };
+  }, []);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setDirection("left");
     dispatch({ type: "PREV_STEP" });
-  };
+  }, []);
 
-  const handleSkip = () => {
+  const handleSkip = useCallback(() => {
     setDirection("right");
     dispatch({ type: "SKIP_STEP" });
-  };
+  }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     const validationError = validateRequiredFields(state);
     if (validationError) {
       dispatch({ type: "SET_ERROR", payload: validationError });
@@ -65,12 +65,12 @@ export default function GenerateSnackForm() {
         payload: error instanceof Error ? error.message : "Nieznany błąd",
       });
     }
-  };
+  }, [state, generateSnack]);
 
-  const handleGenerateNew = async () => {
+  const handleGenerateNew = useCallback(async () => {
     dispatch({ type: "CLEAR_RECOMMENDATION" });
     await handleSubmit();
-  };
+  }, [handleSubmit]);
 
   const handleSaveToFavorites = async () => {
     if (!state.recommendation) return;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import type { ChartOptions, TooltipItem } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
@@ -14,18 +14,35 @@ interface NutritionChartProps {
   fibre: number;
 }
 
-export function NutritionChart({ kcal, protein, fat, carbohydrates, fibre }: NutritionChartProps) {
+export const NutritionChart = React.memo(function NutritionChart({
+  kcal,
+  protein,
+  fat,
+  carbohydrates,
+  fibre,
+}: NutritionChartProps) {
   const chartRef = useRef<ChartJS<"doughnut"> | null>(null);
 
-  // Calculate calories from macronutrients
-  const proteinKcal = protein * 4;
-  const fatKcal = fat * 9;
-  const carbsKcal = carbohydrates * 4;
-  const fibreKcal = fibre * 2; // Approximate
-  const otherKcal = Math.max(0, kcal - proteinKcal - fatKcal - carbsKcal - fibreKcal);
+  // Calculate calories from macronutrients (memoized for performance)
+  const nutritionData = useMemo(() => {
+    const proteinKcal = protein * 4;
+    const fatKcal = fat * 9;
+    const carbsKcal = carbohydrates * 4;
+    const fibreKcal = fibre * 2; // Approximate
+    const otherKcal = Math.max(0, kcal - proteinKcal - fatKcal - carbsKcal - fibreKcal);
+    const hasValidData = protein > 0 || fat > 0 || carbohydrates > 0 || fibre > 0;
 
-  // Validate that we have meaningful data
-  const hasValidData = protein > 0 || fat > 0 || carbohydrates > 0 || fibre > 0;
+    return {
+      proteinKcal,
+      fatKcal,
+      carbsKcal,
+      fibreKcal,
+      otherKcal,
+      hasValidData,
+    };
+  }, [protein, fat, carbohydrates, fibre, kcal]);
+
+  const { proteinKcal, fatKcal, carbsKcal, fibreKcal, otherKcal, hasValidData } = nutritionData;
 
   const data = {
     labels: ["Białko", "Tłuszcze", "Węglowodany", "Błonnik", "Inne"],
@@ -206,4 +223,4 @@ export function NutritionChart({ kcal, protein, fat, carbohydrates, fibre }: Nut
       )}
     </>
   );
-}
+});

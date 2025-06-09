@@ -1,7 +1,8 @@
+import React from "react";
 import type { SnackRecommendationProps } from "../../lib/types/snack-form.types";
 import { Button } from "../ui/button";
 
-export function SnackRecommendation({
+export const SnackRecommendation = React.memo(function SnackRecommendation({
   recommendation,
   onGenerateNew,
   onSaveToFavorites,
@@ -98,4 +99,4 @@ export function SnackRecommendation({
       </div>
     </div>
   );
-}
+});

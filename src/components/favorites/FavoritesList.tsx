@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useFavorites } from "../hooks/useFavorites";
 import { useFavoriteDetails } from "../hooks/useFavoriteDetails";
 import { useModal } from "../hooks/useModal";
@@ -32,28 +32,31 @@ export function FavoritesList() {
   }, [loadPage]);
 
   // Handle viewing details
-  const handleViewDetails = async (favoriteId: number) => {
-    openModal(favoriteId);
-    await loadDetails(favoriteId);
-  };
+  const handleViewDetails = useCallback(
+    async (favoriteId: number) => {
+      openModal(favoriteId);
+      await loadDetails(favoriteId);
+    },
+    [openModal, loadDetails]
+  );
 
   // Handle modal close
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     closeModal();
     clearDetails();
-  };
+  }, [closeModal, clearDetails]);
 
   // Handle remove favorite (from card) - show confirmation
-  const handleRemoveFavoriteFromCard = async (favorite: FavoriteListItemResponse) => {
+  const handleRemoveFavoriteFromCard = useCallback(async (favorite: FavoriteListItemResponse) => {
     setConfirmDialog({
       isOpen: true,
       favoriteToDelete: favorite,
       loading: false,
     });
-  };
+  }, []);
 
   // Handle remove favorite (from modal) - show confirmation
-  const handleRemoveFavoriteFromModal = async (favorite: FavoriteDetailsResponse) => {
+  const handleRemoveFavoriteFromModal = useCallback(async (favorite: FavoriteDetailsResponse) => {
     // Convert FavoriteDetailsResponse to FavoriteListItemResponse for confirm dialog
     const favoriteForDialog: FavoriteListItemResponse = {
       id: favorite.id,
@@ -69,7 +72,7 @@ export function FavoritesList() {
       favoriteToDelete: favoriteForDialog,
       loading: false,
     });
-  };
+  }, []);
 
   // Confirm removal
   const handleConfirmRemoval = async () => {
@@ -113,9 +116,12 @@ export function FavoritesList() {
   };
 
   // Handle pagination
-  const handlePageChange = (page: number) => {
-    loadPage(page);
-  };
+  const handlePageChange = useCallback(
+    (page: number) => {
+      loadPage(page);
+    },
+    [loadPage]
+  );
 
   // Show loading state
   if (loading && favorites.length === 0) {

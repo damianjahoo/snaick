@@ -102,8 +102,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ className }) => {
 
       // Success - show confirmation message
       setIsSuccess(true);
-    } catch (error) {
-      console.error("Register error:", error);
+    } catch {
       setErrors({ general: "Wystąpił błąd połączenia. Spróbuj ponownie." });
     } finally {
       setIsLoading(false);

@@ -1,5 +1,3 @@
-import React from "react";
-
 export function EmptyState() {
   return (
     <div className="bg-white/5 backdrop-blur-lg rounded-xl p-8 lg:p-12 text-center border border-white/10 max-w-2xl mx-auto">

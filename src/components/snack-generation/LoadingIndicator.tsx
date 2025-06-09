@@ -1,6 +1,9 @@
+import React from "react";
 import type { LoadingIndicatorProps } from "../../lib/types/snack-form.types";
 
-export function LoadingIndicator({ message = "Ładowanie..." }: LoadingIndicatorProps) {
+export const LoadingIndicator = React.memo(function LoadingIndicator({
+  message = "Ładowanie...",
+}: LoadingIndicatorProps) {
   return (
     <div className="flex flex-col items-center justify-center p-8">
       <div className="relative h-12 w-12 mb-4">
@@ -10,4 +13,4 @@ export function LoadingIndicator({ message = "Ładowanie..." }: LoadingIndicator
       <p className="text-center text-lg text-blue-100/80">{message}</p>
     </div>
   );
-}
+});

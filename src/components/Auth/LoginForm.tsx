@@ -99,8 +99,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
 
       // Success - redirect to main app
       window.location.href = "/generate";
-    } catch (error) {
-      console.error("Login error:", error);
+    } catch {
       setErrors({ general: "Wystąpił błąd połączenia. Spróbuj ponownie." });
     } finally {
       setIsLoading(false);

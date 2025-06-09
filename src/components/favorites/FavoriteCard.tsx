@@ -7,7 +7,7 @@ interface FavoriteCardProps {
   onRemove: (favorite: FavoriteListItemResponse) => void;
 }
 
-export function FavoriteCard({ favorite, onViewDetails, onRemove }: FavoriteCardProps) {
+export const FavoriteCard = React.memo(function FavoriteCard({ favorite, onViewDetails, onRemove }: FavoriteCardProps) {
   const handleViewDetails = () => {
     onViewDetails(favorite.id);
   };
@@ -59,4 +59,4 @@ export function FavoriteCard({ favorite, onViewDetails, onRemove }: FavoriteCard
       </div>
     </div>
   );
-}
+});

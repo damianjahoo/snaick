@@ -6,13 +6,7 @@ import { z } from "zod";
 export const registerSchema = z
   .object({
     email: z.string().min(1, "Email jest wymagany").email("Nieprawidłowy format email"),
-    password: z
-      .string()
-      .min(8, "Hasło musi mieć co najmniej 8 znaków")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Hasło musi zawierać co najmniej jedną małą literę, jedną wielką literę i jedną cyfrę"
-      ),
+    password: z.string().min(8, "Hasło musi mieć co najmniej 8 znaków"),
     confirmPassword: z.string().min(1, "Potwierdzenie hasła jest wymagane"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -40,13 +34,7 @@ export const passwordResetRequestSchema = z.object({
  */
 export const passwordResetSchema = z.object({
   token: z.string().min(1, "Token jest wymagany"),
-  newPassword: z
-    .string()
-    .min(8, "Hasło musi mieć co najmniej 8 znaków")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      "Hasło musi zawierać co najmniej jedną małą literę, jedną wielką literę i jedną cyfrę"
-    ),
+  newPassword: z.string().min(8, "Hasło musi mieć co najmniej 8 znaków"),
 });
 
 // Export types inferred from schemas
