@@ -1,0 +1,128 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: 22.14.0
+    outputs:
+      success: ${{ steps.lint-result.outputs.success }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        id: lint-result
+        run: |
+          npm run lint
+          echo "success=true" >> $GITHUB_OUTPUT
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: lint
+    if: needs.lint.outputs.success == 'true'
+    env:
+      NODE_VERSION: 22.14.0
+    outputs:
+      success: ${{ steps.test-result.outputs.success }}
+      coverage: ${{ steps.test-result.outputs.coverage }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        id: test-result
+        run: |
+          npm run test:unit -- --coverage
+          if [ -f coverage/coverage-summary.json ]; then
+            COVERAGE=$(node -p "Math.round(JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json', 'utf8')).total.lines.pct)")
+            echo "coverage=${COVERAGE}" >> $GITHUB_OUTPUT
+          else
+            echo "coverage=0" >> $GITHUB_OUTPUT
+          fi
+          echo "success=true" >> $GITHUB_OUTPUT
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: coverage/
+          retention-days: 7
+
+  status-comment:
+    runs-on: ubuntu-latest
+    needs: [lint, unit-tests]
+    if: needs.lint.outputs.success == 'true' && needs.unit-tests.outputs.success == 'true'
+    env:
+      NODE_VERSION: 22.14.0
+    steps:
+      - name: Comment PR status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const coverage = '${{ needs.unit-tests.outputs.coverage }}';
+            const commentBody = `## ✅ Pull Request Status
+
+            | Job | Status | Details |
+            |-----|--------|---------|
+            | Linting | ✅ Passed | Code style checks completed successfully |
+            | Unit Tests | ✅ Passed | All tests passed with ${coverage}% coverage |
+
+            🎉 All checks have passed! This pull request is ready for review.`;
+
+            // Check if there's already a comment from this bot
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.data.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('## ✅ Pull Request Status')
+            );
+
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            } 
