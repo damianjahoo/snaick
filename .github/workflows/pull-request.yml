@@ -27,7 +27,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm install --ignore-optional
+        run: npm ci
 
       - name: Run linting
         id: lint-result
@@ -55,7 +55,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm install --ignore-optional
+        run: npm ci
 
       - name: Run unit tests with coverage
         id: test-result
