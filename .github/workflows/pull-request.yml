@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_VERSION: 22.14.0
+      npm_config_optional: true
     outputs:
       success: ${{ steps.lint-result.outputs.success }}
     steps:
@@ -26,8 +27,11 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
+      - name: Clear npm cache
+        run: npm cache clean --force
+
       - name: Install dependencies
-        run: npm install --ignore-optional
+        run: npm install
 
       - name: Run linting
         id: lint-result
@@ -41,6 +45,7 @@ jobs:
     if: needs.lint.outputs.success == 'true'
     env:
       NODE_VERSION: 22.14.0
+      npm_config_optional: true
     outputs:
       success: ${{ steps.test-result.outputs.success }}
       coverage: ${{ steps.test-result.outputs.coverage }}
@@ -54,8 +59,13 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
+      - name: Clear npm cache
+        run: npm cache clean --force
+
       - name: Install dependencies
-        run: npm install --ignore-optional
+        run: |
+          npm install
+          npm install @rollup/rollup-linux-x64-gnu --save-optional --force
 
       - name: Run unit tests with coverage
         id: test-result
