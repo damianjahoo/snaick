@@ -26,11 +26,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
-      - name: Remove platform-specific lockfile
-        run: rm -f package-lock.json
-
       - name: Install dependencies
-        run: npm install
+        run: npm install --ignore-optional
 
       - name: Run linting
         id: lint-result
@@ -57,11 +54,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
-      - name: Remove platform-specific lockfile
-        run: rm -f package-lock.json
-
       - name: Install dependencies
-        run: npm install
+        run: npm install --ignore-optional
 
       - name: Run unit tests with coverage
         id: test-result
