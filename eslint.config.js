@@ -9,11 +9,24 @@ import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import tseslint from "typescript-eslint";
+import globals from "globals";
 
 // File path setup
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const gitignorePath = path.resolve(__dirname, ".gitignore");
+
+const nodeConfig = tseslint.config({
+  files: ["*.js", "*.mjs", "eslint.config.js"],
+  languageOptions: {
+    globals: {
+      ...globals.node,
+    },
+  },
+  rules: {
+    "no-console": "off",
+  },
+});
 
 const baseConfig = tseslint.config({
   extends: [eslint.configs.recommended, tseslint.configs.strict, tseslint.configs.stylistic],
@@ -24,7 +37,7 @@ const baseConfig = tseslint.config({
 });
 
 const jsxA11yConfig = tseslint.config({
-  files: ["**/*.{js,jsx,ts,tsx}"],
+  files: ["src/**/*.{js,jsx,ts,tsx}"],
   extends: [jsxA11y.flatConfigs.recommended],
   languageOptions: {
     ...jsxA11y.flatConfigs.recommended.languageOptions,
@@ -35,7 +48,7 @@ const jsxA11yConfig = tseslint.config({
 });
 
 const reactConfig = tseslint.config({
-  files: ["**/*.{js,jsx,ts,tsx}"],
+  files: ["src/**/*.{js,jsx,ts,tsx}"],
   extends: [pluginReact.configs.flat.recommended],
   languageOptions: {
     ...pluginReact.configs.flat.recommended.languageOptions,
@@ -59,6 +72,7 @@ const reactConfig = tseslint.config({
 export default tseslint.config(
   includeIgnoreFile(gitignorePath),
   baseConfig,
+  nodeConfig,
   jsxA11yConfig,
   reactConfig,
   eslintPluginAstro.configs["flat/recommended"],

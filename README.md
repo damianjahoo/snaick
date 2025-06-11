@@ -34,6 +34,7 @@ SnAIck is a web application that helps users quickly select healthy and tasty sn
 ## Tech Stack
 
 ### Frontend
+
 - [Astro 5](https://astro.build/) - Fast, modern web framework with minimal JavaScript
 - [React 19](https://react.dev/) - For interactive components
 - [TypeScript 5](https://www.typescriptlang.org/) - Static typing and better IDE support
@@ -41,17 +42,19 @@ SnAIck is a web application that helps users quickly select healthy and tasty sn
 - [Shadcn/ui](https://ui.shadcn.com/) - Accessible React component library
 
 ### Backend
+
 - [Supabase](https://supabase.io/) - Open source Firebase alternative
   - PostgreSQL database
   - Built-in user authentication
   - SDK for multiple languages
 
 ### AI Integration
+
 - [Openrouter.ai](https://openrouter.ai/) - Access to various LLM models (OpenAI, Anthropic, Google, etc.)
 
 ### CI/CD & Hosting
+
 - GitHub Actions - CI/CD pipelines
-- DigitalOcean - Hosting via Docker image
 
 ## Getting Started
 
@@ -63,42 +66,104 @@ SnAIck is a web application that helps users quickly select healthy and tasty sn
 ### Quick start
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/your-username/snaick.git
    cd snaick
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Start the development server:
+
    ```bash
    npm run dev
    ```
 
 4. Open your browser and navigate to `http://localhost:3000`
 
+## Development Setup
+
+### Local Database Setup
+
+The project uses Supabase for the backend. For local development:
+
+1. Install and start Supabase CLI locally (follow [Supabase local development guide](https://supabase.com/docs/guides/cli/local-development))
+
+2. Start the local Supabase stack:
+
+   ```bash
+   supabase start
+   ```
+
+3. Your local Supabase instance will be available at `http://127.0.0.1:54321`
+
+### Demo User Creation
+
+To quickly test the application with sample data, you can create a demo user:
+
+1. Set the required environment variables:
+
+   ```bash
+   export SUPABASE_LOCAL_URL=your_local_supabase_url
+   export SUPABASE_LOCAL_KEY=your_local_supabase_key
+   ```
+
+   You can find this key in your local Supabase dashboard or by running `supabase status`.
+
+2. Run the demo script:
+   ```bash
+   node create-demo-user.js
+   ```
+
+This script will:
+
+- Create a demo user with email `demo@example.com` and password `demo123`
+- Add all available snacks to the user's favorites list
+- Set up the user for immediate testing
+
+**Demo User Credentials:**
+
+- Email: `demo@example.com`
+- Password: `demo123`
+
+> **Note:** This script is designed for local development only and requires a running local Supabase instance.
+
 ## Available Scripts
 
+### Development Scripts
+
 - `npm run dev` - Start the development server
-- `npm run build` - Build the application for production
-- `npm run preview` - Preview the production build locally
-- `npm run astro` - Run Astro CLI commands
+
+### Code Quality Scripts
+
 - `npm run lint` - Run ESLint to check for code issues
 - `npm run lint:fix` - Fix ESLint issues automatically
 - `npm run format` - Format code with Prettier
+
+### Testing Scripts
+
+- `npm run test:unit` - Run unit tests with Vitest
+
+### Database Setup Scripts
+
+- `node create-demo-user.js` - Create a demo user with sample data for development testing
 
 ## Project Scope
 
 ### MVP Features
 
 1. Registration and login system
+
    - Email and password-based authentication
    - Basic security: authorization, authentication, and data protection
 
 2. User preference form
+
    - Information about meals eaten that day
    - Snack type preferences (sweet, salty, light, filling)
    - Dietary exclusions
@@ -108,6 +173,7 @@ SnAIck is a web application that helps users quickly select healthy and tasty sn
    - Permanent dietary restrictions (veganism, vegetarianism, intolerances, allergies)
 
 3. AI-powered snack generation
+
    - Using LLM models via Openrouter.ai
    - Personalized suggestions based on form data
    - Standard format results including:
@@ -118,7 +184,7 @@ SnAIck is a web application that helps users quickly select healthy and tasty sn
      - Nutritional values (calories, protein, fats, carbohydrates, fiber)
 
 4. Snack management
-   - List of generated suggestions with option to add to favorites
+
    - List of favorite snacks with editing capability (deletion)
    - Saving snack history after accepting suggestions
 
@@ -147,10 +213,12 @@ The project is currently in the PoC (Proof of Concept) development phase.
 ### Success Metrics
 
 1. User engagement:
+
    - 80% of registered users generate at least one snack suggestion
    - 60% of registered users save at least one snack as a favorite
 
 2. Main flow effectiveness:
+
    - High completion rate from filling out the form to generating a suggestion (>90%)
    - Low suggestion rejection and new generation rate (<50% of cases)
 

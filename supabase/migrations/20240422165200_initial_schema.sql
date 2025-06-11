@@ -9,9 +9,6 @@ create type location_enum as enum ('praca', 'dom', 'sklep', 'poza domem');
 create type goal_enum as enum ('utrzymanie', 'redukcja', 'przyrost');
 create type preferred_diet_enum as enum ('standard', 'wegetariańska', 'wegańska', 'bezglutenowa');
 
--- this table is managed by supabase auth but we still need to enable rls
-alter table auth.users enable row level security;
-
 -- create snacks table
 create table public.snacks (
     id serial primary key,
