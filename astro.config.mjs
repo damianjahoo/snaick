@@ -9,7 +9,7 @@ import node from "@astrojs/node";
 // https://astro.build/config
 export default defineConfig({
   output: "server",
-  integrations: [react(), sitemap()],
+  integrations: [react(), sitemap({ site: "https://7bb33e4c.snaick.pages.dev/" })],
   server: { port: 3000 },
   vite: {
     plugins: [tailwindcss()],
