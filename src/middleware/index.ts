@@ -1,3 +1,6 @@
+// Import polyfills first before any other imports to ensure compatibility with Cloudflare Workers
+import "../lib/polyfills";
+
 import { defineMiddleware } from "astro:middleware";
 import { createSupabaseServerInstance } from "../db/supabase.client.ts";
 

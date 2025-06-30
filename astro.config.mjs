@@ -15,6 +15,14 @@ export default defineConfig({
   vite: {
     // @ts-expect-error - Type compatibility issue with Tailwind CSS v4 Vite plugin
     plugins: [tailwindcss()],
+    ssr: {
+      // Ensure polyfills are loaded before React SSR
+      external: [],
+    },
+    define: {
+      // Inject polyfill for MessageChannel in Cloudflare Workers
+      "import.meta.env.POLYFILL_MESSAGE_CHANNEL": "true",
+    },
   },
   adapter: cloudflare(),
   experimental: { session: true },
