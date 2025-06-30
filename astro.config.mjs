@@ -15,13 +15,14 @@ export default defineConfig({
   vite: {
     // @ts-expect-error - Type compatibility issue with Tailwind CSS v4 Vite plugin
     plugins: [tailwindcss()],
-    ssr: {
-      // Ensure polyfills are loaded before React SSR
-      external: [],
-    },
-    define: {
-      // Inject polyfill for MessageChannel in Cloudflare Workers
-      "import.meta.env.POLYFILL_MESSAGE_CHANNEL": "true",
+    resolve: {
+      // Use react-dom/server.edge instead of react-dom/server.browser for React 19
+      // This resolves MessageChannel compatibility issues with Cloudflare Workers
+      alias: import.meta.env.PROD
+        ? {
+            "react-dom/server": "react-dom/server.edge",
+          }
+        : undefined,
     },
   },
   adapter: cloudflare(),
