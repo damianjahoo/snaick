@@ -1,75 +1,41 @@
 import type { APIRoute } from "astro";
-import { generateSnackSchema } from "../../../lib/validation/snack.schema";
 import { SnackService } from "../../../lib/services/snack.service";
 import type { GenerateSnackRequest } from "../../../types";
-import { createSupabaseServerInstance } from "../../../db/supabase.client";
+import { generateSnackSchema } from "../../../lib/validation/snack.schema";
 
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async (context) => {
+  const { locals, request } = context;
+  const supabase = locals.supabase;
+
+  if (!supabase) {
+    // This should not happen when deployed on Cloudflare
+    return new Response(JSON.stringify({ message: "Supabase client not available" }), { status: 500 });
+  }
+
+  if (!locals.user) {
+    return new Response(JSON.stringify({ message: "Unauthorized" }), { status: 401 });
+  }
+
   try {
-    // Create Supabase server instance with proper SSR support
-    const supabase = createSupabaseServerInstance({
-      cookies,
-      headers: request.headers,
-    });
-
-    // For testing purposes, we're not implementing real authentication
-    // In production, we would check the session here
-    // const { data: { session } } = await supabase.auth.getSession();
-    // if (!session) {
-    //   return new Response(
-    //     JSON.stringify({ error: "Unauthorized" }),
-    //     { status: 401, headers: { "Content-Type": "application/json" } }
-    //   );
-    // }
-
-    // Parse and validate request body
-    let requestBody;
+    let body: GenerateSnackRequest;
     try {
-      requestBody = await request.json();
+      body = await request.json();
+      generateSnackSchema.parse(body);
     } catch (error) {
-      return new Response(
-        JSON.stringify({
-          error: "Invalid JSON in request body " + error,
-        }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      return new Response(JSON.stringify({ message: "Invalid request body", errors: errorMessage }), { status: 400 });
     }
 
-    const validationResult = generateSnackSchema.safeParse(requestBody);
-
-    if (!validationResult.success) {
-      return new Response(
-        JSON.stringify({
-          error: "Invalid request data",
-          details: validationResult.error.format(),
-        }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    // Generate snack recommendation
     const snackService = new SnackService(supabase);
-    const snackRecommendation = await snackService.generateSnackRecommendation(
-      validationResult.data as GenerateSnackRequest
-    );
+    const snackRecommendation = await snackService.generateSnackRecommendation(body);
 
-    // Return the recommendation
     return new Response(JSON.stringify(snackRecommendation), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    // Determine if this is a known error type or unknown
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-
-    return new Response(
-      JSON.stringify({
-        error: "Internal server error",
-        message: errorMessage,
-      }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ message: "Failed to generate snack", error: errorMessage }), { status: 500 });
   }
 };

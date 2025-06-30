@@ -1,11 +1,15 @@
 import type { APIRoute } from "astro";
 import { registerSchema } from "../../../lib/validation/auth.schema";
 import type { RegisterDTO } from "../../../types";
-import { createSupabaseServerInstance } from "../../../db/supabase.client";
 
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
+  const supabase = locals.supabase;
+  if (!supabase) {
+    return new Response(JSON.stringify({ message: "Wewnętrzny błąd serwera" }), { status: 500 });
+  }
+
   try {
     // Parse request body
     const body = await request.json();
@@ -27,12 +31,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     const validatedData: RegisterDTO = validationResult.data;
-
-    // Create Supabase server instance with proper SSR support
-    const supabase = createSupabaseServerInstance({
-      cookies,
-      headers: request.headers,
-    });
 
     // Attempt to sign up with Supabase
     const { data, error } = await supabase.auth.signUp({

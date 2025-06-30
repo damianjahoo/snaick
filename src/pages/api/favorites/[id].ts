@@ -2,27 +2,24 @@ import type { APIRoute } from "astro";
 import { z } from "zod";
 import type { FavoriteDetailsResponse, RemoveFavoriteResponse } from "../../../types";
 import { FavoriteService } from "../../../lib/services/favorite.service";
-import { createSupabaseServerInstance } from "../../../db/supabase.client";
 import { favoriteIdSchema } from "../../../lib/validation/favorite.schema";
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ params, request, cookies, locals }) => {
-  try {
-    // Check authentication from middleware
-    if (!locals.user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    // Create Supabase server instance
-    const supabase = createSupabaseServerInstance({
-      cookies,
-      headers: request.headers,
+export const GET: APIRoute = async ({ params, request, locals }) => {
+  if (!locals.user) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
     });
+  }
 
+  const supabase = locals.supabase;
+  if (!supabase) {
+    return new Response(JSON.stringify({ error: "Supabase client is not available" }), { status: 500 });
+  }
+
+  try {
     // Validate ID parameter
     let validatedParams;
     try {
@@ -73,22 +70,20 @@ export const GET: APIRoute = async ({ params, request, cookies, locals }) => {
   }
 };
 
-export const DELETE: APIRoute = async ({ params, request, cookies, locals }) => {
-  try {
-    // Check authentication from middleware
-    if (!locals.user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    // Create Supabase server instance
-    const supabase = createSupabaseServerInstance({
-      cookies,
-      headers: request.headers,
+export const DELETE: APIRoute = async ({ params, request, locals }) => {
+  if (!locals.user) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
     });
+  }
 
+  const supabase = locals.supabase;
+  if (!supabase) {
+    return new Response(JSON.stringify({ error: "Supabase client is not available" }), { status: 500 });
+  }
+
+  try {
     // Validate ID parameter
     let validatedParams;
     try {

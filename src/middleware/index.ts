@@ -1,5 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
-import { createSupabaseServerInstance } from "../db/supabase.client.ts";
+import { createSupabaseServerInstance } from "../db/supabase.client";
 
 // Public paths - Auth API endpoints & Server-Rendered Astro Pages
 const PUBLIC_PATHS = [
@@ -20,21 +20,27 @@ const AUTH_ONLY_PATHS = ["/login", "/register"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { url, locals, redirect, cookies, request } = context;
+  const runtime = locals.runtime;
+
+  if (!runtime) {
+    // If runtime is not available, proceed without user context
+    return next();
+  }
+
+  const { env } = runtime;
 
   // Simple test - if accessing /generate without proper setup, redirect to login
   if (url.pathname === "/generate") {
     // Check if we have basic env vars
-    if (!import.meta.env.SUPABASE_URL || !import.meta.env.SUPABASE_KEY) {
+    if (!env.SUPABASE_URL || !env.SUPABASE_KEY) {
       return redirect("/login");
     }
   }
 
   try {
     // Create Supabase server instance with proper SSR support
-    const supabase = createSupabaseServerInstance({
-      cookies,
-      headers: request.headers,
-    });
+    const supabase = createSupabaseServerInstance({ headers: request.headers, cookies }, env);
+    locals.supabase = supabase;
 
     // IMPORTANT: Always get user session first before any other operations
     const {
@@ -42,12 +48,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
     } = await supabase.auth.getUser();
 
     if (user) {
-      (locals as typeof locals & { user: { id: string; email: string | undefined } | null }).user = {
-        email: user.email,
+      locals.user = {
         id: user.id,
+        email: user.email,
       };
     } else {
-      (locals as typeof locals & { user: { id: string; email: string | undefined } | null }).user = null;
+      locals.user = null;
     }
 
     // Check if current path is public
@@ -70,12 +76,14 @@ export const onRequest = defineMiddleware(async (context, next) => {
     if (!user && !isPublicPath) {
       return redirect("/login");
     }
+
+    locals.supabase = createSupabaseServerInstance({ headers: request.headers, cookies }, env);
     const response = await next();
     response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
     return response;
   } catch {
     // On error, treat as unauthenticated
-    (locals as typeof locals & { user: { id: string; email: string | undefined } | null }).user = null;
+    locals.user = null;
 
     // If trying to access protected route, redirect to login
     const isPublicPath = PUBLIC_PATHS.some((path) => {
@@ -89,6 +97,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       return redirect("/login");
     }
 
+    locals.supabase = createSupabaseServerInstance({ headers: request.headers, cookies }, env);
     const response = await next();
     response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
     return response;
