@@ -7,13 +7,18 @@ export const prerender = false;
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
+    console.log("Login attempt started");
+    console.log("SUPABASE_URL from env:", import.meta.env.SUPABASE_URL);
+    console.log("SUPABASE_KEY from env:", import.meta.env.SUPABASE_KEY ? "Set" : "Not Set or Empty");
     // Parse request body
     const body = await request.json();
+    console.log("Request body parsed");
 
     // Validate input using Zod schema
     const validationResult = loginSchema.safeParse(body);
 
     if (!validationResult.success) {
+      console.error("Login validation failed:", validationResult.error.errors);
       return new Response(
         JSON.stringify({
           message: "Nieprawidłowe dane wejściowe",
@@ -27,6 +32,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     const { email, password }: LoginDTO = validationResult.data;
+    console.log(`Login validation successful for email: ${email}`);
 
     // Create Supabase server instance with proper SSR support
     const supabase = createSupabaseServerInstance({
@@ -41,6 +47,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
 
     if (error) {
+      console.error("Supabase login error:", error.message);
       // Handle different types of auth errors
       if (error.message.includes("Invalid login credentials")) {
         return new Response(JSON.stringify({ message: "Nieprawidłowy email lub hasło" }), {
@@ -60,6 +67,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }
 
       // Generic error for other cases
+      console.error("Unhandled Supabase error during login:", error);
       return new Response(JSON.stringify({ message: "Błąd podczas logowania. Spróbuj ponownie." }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
@@ -67,6 +75,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     // Success response
+    console.log(`User ${data.user?.email} successfully logged in.`);
     return new Response(
       JSON.stringify({
         message: "Logowanie zakończone sukcesem",
@@ -80,7 +89,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-  } catch {
+  } catch (e) {
+    console.error("Internal server error during login:", e);
     return new Response(JSON.stringify({ message: "Wewnętrzny błąd serwera" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

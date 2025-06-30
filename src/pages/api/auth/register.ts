@@ -26,7 +26,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       );
     }
 
-    const { email, password }: RegisterDTO = validationResult.data;
+    const validatedData: RegisterDTO = validationResult.data;
 
     // Create Supabase server instance with proper SSR support
     const supabase = createSupabaseServerInstance({
@@ -36,8 +36,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     // Attempt to sign up with Supabase
     const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
+      email: validatedData.email,
+      password: validatedData.password,
     });
 
     if (error) {
